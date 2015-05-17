@@ -14,11 +14,13 @@ namespace Kursach
     public partial class UML_diagram_form : Form
     {
         public List<ClassBox> Classes = new List<ClassBox>();
+        public List<Agregation> Agregations = new List<Agregation>();
         int PosX, PosY;  //Координаты в которых будет расположен следующий объект
         int dX, dY;      //Для точного перетаскивания мышкой
         Bitmap buffImage;
         Graphics g, gBuffer;
         bool isClicked = false;  //Нажатие мыши на объект
+        bool setAgregation = false;
 
         public UML_diagram_form()
         {
@@ -83,30 +85,63 @@ namespace Kursach
         {
             if (e.Button == MouseButtons.Left)
             {
-                int number = 0;
-                foreach (ClassBox C in Classes)
-                    C.isSelected = false;
-
-                foreach (ClassBox C in Classes) //выводим объект поверх других и выделяем
+                if (!setAgregation)
                 {
-                    if ((e.X > C.X) && (e.X < C.X + C.Width))       //если попали
-                        if ((e.Y > C.Y) && (e.Y < C.Y + C.Height))  //в него мышей
-                        {
-                            isClicked = true;
-                            dX = e.X - C.X;
-                            dY = e.Y - C.Y;
-                            Classes.Add(Classes[number]);
-                            Classes.RemoveAt(number);
-                            Classes[Classes.Count - 1].isSelected = true;
+                    int number = 0;
+                    foreach (ClassBox C in Classes)
+                        C.isSelected = false;
+
+                    foreach (ClassBox C in Classes) //выводим объект поверх других и выделяем
+                    {
+                        if ((e.X > C.X) && (e.X < C.X + C.Width))       //если попали
+                            if ((e.Y > C.Y) && (e.Y < C.Y + C.Height))  //в него мышей
+                            {
+                                isClicked = true;
+                                dX = e.X - C.X;
+                                dY = e.Y - C.Y;
+                                Classes.Add(Classes[number]);
+                                Classes.RemoveAt(number);
+                                Classes[Classes.Count - 1].isSelected = true;
+                                break;
+                            }
+                        number++;
+                    }
+                }
+                else
+                {
+                    int index1=0, index2=0;
+                    foreach (ClassBox c in Classes)
+                    {
+                        if (c.isSelected)
                             break;
-                        }
-                    number++;
+                        index1++;
+                    }
+                    foreach (ClassBox C in Classes)
+                    {
+                        if ((e.X > C.X) && (e.X < C.X + C.Width))
+                            if ((e.Y > C.Y) && (e.Y < C.Y + C.Height))
+                                break;
+                        index2++;
+                    }
+                    if (index1 != index2)
+                    {
+                        Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
+                        Classes[index2].Variables.Add(new C_Variables(Classes[index1].ClassName, Classes[index1].ClassName.ToLower()));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ну ты совсем дибил!");
+                    }
+                    setAgregation = false;
+                
+                    
+                    
                 }
                 Redraw();
                 //----------------------------------------------------
             }
             else
-                contextMenuStrip1.Show(e.X,e.Y);
+                contextMenuStrip1.Show(pictureBox1,e.X,e.Y);
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -149,7 +184,21 @@ namespace Kursach
             {
                 C.draw(gBuffer);
             }
-            g.DrawImage(buffImage, 0, 0);
+
+            foreach (Agregation A in Agregations)
+            {
+                A.draw(gBuffer);
+            }
+
+            try //Какой то странный баг...
+            {
+                g.DrawImage(buffImage, 0, 0);
+            }
+            catch 
+            {
+                gBuffer = Graphics.FromImage(buffImage);
+                g = pictureBox1.CreateGraphics(); 
+            }
         }
 
         private void UML_diagram_form_Load(object sender, EventArgs e)
@@ -172,7 +221,6 @@ namespace Kursach
         private void generate_code_button_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog f = new FolderBrowserDialog();
-            string path = "";
             if (f.ShowDialog() == DialogResult.OK)
             {
                 foreach (ClassBox c in Classes)
@@ -199,6 +247,11 @@ namespace Kursach
                     sw.Close();
                 }
             }
+        }
+
+        private void addAgregationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            setAgregation = true;
         }
 
     }

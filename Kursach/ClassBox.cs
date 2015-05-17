@@ -34,7 +34,7 @@ namespace Kursach
             Y = PosY;
             this.Width = Width;
             this.Height = Height;
-            Name = "Class " + Count;
+            Name = "Class_" + Count;
             Count++;
             Border = new Pen(new SolidBrush(Color.Black),2);
             Select = new Pen(new SolidBrush(Color.LightGreen),2);
@@ -51,6 +51,7 @@ namespace Kursach
 
         public void draw(Graphics g)
         {
+            Resize();
             Rectangle R = new Rectangle(X, Y, Width, Height);
             g.FillRectangle(Background, R);
             g.DrawRectangle(Border, R);           
@@ -70,18 +71,10 @@ namespace Kursach
             }
         }
 
-        //public void DrawAgregation(Graphics g)
-        //{
-        //    if ((X < AgregatedClassBox.X - Width))
-        //        g.DrawLine(black, X + Width, Y + Height / 2, AgregatedClassBox.X, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
-        //    else if ((X+Width >= AgregatedClassBox.X) && (X <= AgregatedClassBox.X + AgregatedClassBox.Width))
-        //        if (Y < AgregatedClassBox.Y)
-        //            g.DrawLine(black, X + Width / 2, Y + Height, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y);
-        //        else
-        //            g.DrawLine(black, X + Width / 2, Y, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y + Height);
-        //    else
-        //        g.DrawLine(black, X, Y + Height / 2, AgregatedClassBox.X+AgregatedClassBox.Width, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
-        //}
+        void Resize()
+        {
+            Height = 15 * (Variables.Count + Methods.Count+2);
+        }
 
         public void TestValues()
         {

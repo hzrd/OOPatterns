@@ -24,14 +24,12 @@ namespace Kursach
         {
             cf.Hide();
             udf.Show();
-            udf.Refresh();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             udf.Hide();
             cf.Show();
-            cf.Refresh();
         }
 
         private void Main_Load(object sender, EventArgs e)

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agregation.cs" />
     <Compile Include="ClassBox.cs" />
     <Compile Include="ClassConfigurationForm.cs">
       <SubType>Form</SubType>

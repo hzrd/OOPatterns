@@ -55,6 +55,7 @@
             this.addAgregationToolStripMenuItem.Name = "addAgregationToolStripMenuItem";
             this.addAgregationToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.addAgregationToolStripMenuItem.Text = "Add Agregation";
+            this.addAgregationToolStripMenuItem.Click += new System.EventHandler(this.addAgregationToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 
