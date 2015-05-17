@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Kursach
 {
-    //Добавил комментарий
     public partial class UML_diagram_form : Form
     {
         public List<ClassBox> Classes = new List<ClassBox>();
@@ -204,6 +204,39 @@ namespace Kursach
                     C.Agregated = true;
             }
             MessageBox.Show("Select Class to agregate");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //CodeGeneration_module tempTry = new CodeGeneration_module();
+            //List<_Class> tempc = new List<_Class>();
+            //tempTry.CodeFromFile("ExpressionEvaluator.h", tempc);
+            //List<string> ls = new List<string>();
+
+            //foreach (_Class c in tempc)
+            //{
+            //    foreach (C_Variables v in c.Variables)
+            //    {
+            //        ls.Add("Переменная класса:" + v.Type + " " + v.Name + "\n");
+                    
+            //    }
+            //    foreach (C_Methods m in c.Methods)
+            //    {
+            //        string text = "Метод:" + m.Type + " " + m.Name;
+            //        foreach (C_Variables var in m.Variables)
+            //        {
+            //            text += var.Type + " " + var.Name + ",";
+            //        }
+            //        if (text[text.Length - 1] == ',')
+            //        {
+            //            text = text.Remove(text.Length - 1);
+            //        }
+            //        text += ");";
+            //        ls.Add(text);
+            //    }
+            //}
+            //textBox1.Lines = ls.ToArray();
+            MessageBox.Show("МАМКУ %?*&Ь СВОЮ ПОЧИТАЙ!!!");
         }
 
     }

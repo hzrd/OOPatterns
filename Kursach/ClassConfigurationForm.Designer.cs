@@ -83,9 +83,10 @@
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавитьСвойТипДляПеременнойToolStripMenuItem,
             this.сохранитьToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = global::Kursach.Properties.Resources.setting;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(13, 22);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
             this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
             // 
             // сохранитьToolStripMenuItem
@@ -129,6 +130,8 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(90, 20);
             this.textBox3.TabIndex = 33;
+            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
+            this.textBox3.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox3_PreviewKeyDown);
             // 
             // comboBox3
             // 
@@ -185,6 +188,7 @@
             this.columnMethVarName});
             this.listView3.ContextMenuStrip = this.contextMenuStrip1;
             this.listView3.Enabled = false;
+            this.listView3.FullRowSelect = true;
             this.listView3.Location = new System.Drawing.Point(250, 319);
             this.listView3.Name = "listView3";
             this.listView3.Size = new System.Drawing.Size(166, 94);
@@ -192,6 +196,7 @@
             this.listView3.UseCompatibleStateImageBehavior = false;
             this.listView3.View = System.Windows.Forms.View.Details;
             this.listView3.SelectedIndexChanged += new System.EventHandler(this.listView3_SelectedIndexChanged);
+            this.listView3.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listView3_PreviewKeyDown);
             // 
             // contextMenuStrip1
             // 
@@ -231,6 +236,8 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(155, 20);
             this.textBox2.TabIndex = 28;
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
+            this.textBox2.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox2_PreviewKeyDown);
             // 
             // label3
             // 
@@ -282,6 +289,7 @@
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
             this.listView2.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
+            this.listView2.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listView2_PreviewKeyDown);
             // 
             // button1
             // 
@@ -299,6 +307,8 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(90, 20);
             this.textBox1.TabIndex = 21;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            this.textBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox1_PreviewKeyDown);
             // 
             // comboBox1
             // 
@@ -382,6 +392,7 @@
             this.columnTypeVar,
             this.columnNameVar});
             this.listView1.ContextMenuStrip = this.contextMenuStrip1;
+            this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(8, 43);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(166, 187);
@@ -389,6 +400,7 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listView1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listView1_PreviewKeyDown);
             // 
             // ClassConfigurationForm
             // 
@@ -413,6 +425,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.listView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ClassConfigurationForm";
             this.Text = "ClassConfigurationForm";
             this.Load += new System.EventHandler(this.ClassConfigurationForm_Load);
