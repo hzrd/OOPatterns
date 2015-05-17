@@ -94,6 +94,7 @@
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
             this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить  и закрыть Ctrl+S";
+            this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click_1);
             // 
             // toolStripSeparator2
             // 

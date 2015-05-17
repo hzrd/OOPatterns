@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Kursach
 {
-    public class ClassBox
+    public class ClassBox 
     {
         public int X{set;get;}
         public int Y{set;get;}
@@ -65,28 +65,7 @@ namespace Kursach
             }
             foreach (C_Methods cm in Methods)
             {
-                g.DrawString(cm.Type + " " + cm.Name, new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
-                dY += 15;
-            }
-        }
-
-        public void draw(Graphics g, int PosX, int PosY)
-        {
-            Rectangle R = new Rectangle(PosX, PosY, Width, Height);
-            g.FillRectangle(Background, R);
-            g.DrawRectangle(Border, R);
-            if (isSelected)
-                g.DrawRectangle(Select, R);
-            g.DrawString(Name, new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + 2);
-            int dY = 17;
-            foreach (C_Variables cv in Variables)
-            {
-                g.DrawString(cv.Type + " " + cv.Name, new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
-                dY += 15;
-            }
-            foreach (C_Methods cm in Methods)
-            {
-                g.DrawString(cm.Type + " " + cm.Name, new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
+                g.DrawString(cm.Type + " " + cm.Name+"()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
                 dY += 15;
             }
         }
@@ -109,10 +88,10 @@ namespace Kursach
             Variables.Add(new C_Variables("int", "Length"));
             Variables.Add(new C_Variables("int", "Heigth"));
             Variables.Add(new C_Variables("int", "Weigth"));
-            Methods.Add(new C_Methods("void", "Run()"));
+            Methods.Add(new C_Methods("void", "Run"));
             Methods[0].AddVariable(new C_Variables("int", "speed"));
             Methods[0].AddVariable(new C_Variables("int", "deeps"));
-            Methods.Add(new C_Methods("void", "Jump()"));
+            Methods.Add(new C_Methods("void", "Jump"));
             Methods[1].AddVariable(new C_Variables("int", "heigth"));
             Methods[1].AddVariable(new C_Variables("int", "htgieh"));
         }

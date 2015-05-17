@@ -17,6 +17,7 @@ namespace Kursach
         int index;
         UML_diagram_form f;
         Bitmap bmp;
+        ClassBox temp;
 
         //Массив переменных и методов
         List<C_Variables> vars = new List<C_Variables>();
@@ -41,6 +42,9 @@ namespace Kursach
         private void ClassConfigurationForm_Load(object sender, EventArgs e)
         {
             f = this.Owner as UML_diagram_form;
+            temp = new ClassBox(50,50,100,100);
+            temp.Variables.Clear();
+            temp.Methods.Clear();
             //Загружаем переменные в форму
             foreach (C_Variables v in f.Classes[index].Variables)
             {
@@ -52,7 +56,7 @@ namespace Kursach
                 AddMethods(m);
             }
             g = Graphics.FromImage(bmp);
-            f.Classes[index].draw(g, 50, 50);
+            temp.draw(g);
             pictureBox1.Image = bmp;
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +81,7 @@ namespace Kursach
             if (CheckSystemName(var.Name))
             {
                 //Добавляем переменную в list
-                vars.Add(var);
+                temp.Variables.Add(var);
                 //И на форму
                 ListViewItem item = new ListViewItem(var.Type);
                 item.SubItems.Add(var.Name);
@@ -95,7 +99,7 @@ namespace Kursach
             if (CheckSystemName(meth.Name))
             {
                 //Добавляем метод в list
-                meths.Add(meth);
+                temp.Methods.Add(meth);
                 //И на форму
                 ListViewItem item = new ListViewItem(meth.Type);
                 item.SubItems.Add(meth.Name);
@@ -200,10 +204,10 @@ namespace Kursach
         private void DeleteVariable(string sNameVariable)
         {
             //Убираем ненужную переменную
-            vars.RemoveAt(vars.Count - 1);
+            temp.Variables.RemoveAt(temp.Variables.Count - 1);
             //Перезагружаем переменные
             listView1.Items.Clear();
-            foreach (C_Variables v in vars)
+            foreach (C_Variables v in temp.Variables)
             {
                 ListViewItem item = new ListViewItem(v.Type);
                 item.SubItems.Add(v.Name);
@@ -214,10 +218,10 @@ namespace Kursach
         private void DeleteMethod(string sNameMethod)
         {
             //Убираем ненужный метод
-            meths.RemoveAt(meths.Count - 1);
+            temp.Methods.RemoveAt(temp.Methods.Count - 1);
             //Перезагружаем методы
             listView2.Items.Clear();
-            foreach (C_Methods m in meths)
+            foreach (C_Methods m in temp.Methods)
             {
                 ListViewItem item = new ListViewItem(m.Type);
                 item.SubItems.Add(m.Name);
@@ -230,28 +234,28 @@ namespace Kursach
             int numberMethod = 0;
             int numberVariable = 0;
             //Находим нужный метод в массиве
-            for (int i = 0; i < meths.Count; i++)
+            for (int i = 0; i < temp.Methods.Count; i++)
             {
-                if (meths[i].Name == sNameMethod)
+                if (temp.Methods[i].Name == sNameMethod)
                 {
                     numberMethod = i;
                     break;
                 }
             }
             //В данном методе находим нужную переменную
-            for (int i = 0; i < meths[numberMethod].Variables.Count; i++)
+            for (int i = 0; i < temp.Methods[numberMethod].Variables.Count; i++)
             {
-                if (meths[numberMethod].Variables[i].Name == sNameVariable)
+                if (temp.Methods[numberMethod].Variables[i].Name == sNameVariable)
                 {
                     numberVariable = i;
                     break;
                 }
             }
             //Удаляем данную переменную
-            meths[numberMethod].DeleteVariable(meths[numberMethod].Variables[numberVariable]);
+            temp.Methods[numberMethod].DeleteVariable(temp.Methods[numberMethod].Variables[numberVariable]);
             //Перезагружаем данные
             listView3.Items.Clear();
-            foreach (C_Variables v in meths[numberMethod].Variables)
+            foreach (C_Variables v in temp.Methods[numberMethod].Variables)
             {
                 ListViewItem item = new ListViewItem(v.Type);
                 item.SubItems.Add(v.Name);
@@ -295,7 +299,7 @@ namespace Kursach
                         if (dialogResult == DialogResult.Yes)
                         {
                             //Находим нужную переменную
-                            foreach (C_Variables v in vars)
+                            foreach (C_Variables v in temp.Variables)
                             {
                                 //Заменяем данные и выходим с цикла
                                 if (v.Name == listView1.FocusedItem.SubItems[1].Text)
@@ -307,7 +311,7 @@ namespace Kursach
                             }
                             //Загружаем переменные
                             listView1.Items.Clear();
-                            foreach (C_Variables v in vars)
+                            foreach (C_Variables v in temp.Variables)
                             {
                                 ListViewItem item = new ListViewItem(v.Type);
                                 item.SubItems.Add(v.Name);
@@ -326,7 +330,8 @@ namespace Kursach
                 }
             }
             g = pictureBox1.CreateGraphics();
-            f.Classes[index].draw(g,50,50);
+            g.Clear(Color.White);
+            temp.draw(g);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -362,7 +367,7 @@ namespace Kursach
                                                     , "Изменение метода", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            foreach (C_Methods m in meths)
+                            foreach (C_Methods m in temp.Methods)
                             {
                                 if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                                 {
@@ -372,7 +377,7 @@ namespace Kursach
                                 }
                             }
                             listView2.Items.Clear();
-                            foreach (C_Methods m in meths)
+                            foreach (C_Methods m in temp.Methods)
                             {
                                 ListViewItem item = new ListViewItem(m.Type);
                                 item.SubItems.Add(m.Name);
@@ -388,7 +393,9 @@ namespace Kursach
                 {
                     MessageBox.Show(ex.Message);
                 }
-                f.Classes[index].draw(g,50,50);
+                g = pictureBox1.CreateGraphics();
+                g.Clear(Color.White);
+                temp.draw(g);
             }
         }
 
@@ -404,7 +411,7 @@ namespace Kursach
                 {
                     if (CheckList(listView3, listView2, var.Name) == 1)
                     {
-                        foreach (C_Methods m in meths)
+                        foreach (C_Methods m in temp.Methods)
                         {
                             if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                             {
@@ -435,7 +442,7 @@ namespace Kursach
                         if (dialogResult == DialogResult.Yes)
                         {
                             //Ищем нужный метод
-                            foreach (C_Methods m in meths)
+                            foreach (C_Methods m in temp.Methods)
                             {
                                 if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                                 {
@@ -471,7 +478,9 @@ namespace Kursach
                 {
                     MessageBox.Show(ex.Message);
                 }
-                f.Classes[index].draw(g,50,50);
+                g = pictureBox1.CreateGraphics();
+                g.Clear(Color.White);
+                temp.draw(g);
             }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -489,7 +498,7 @@ namespace Kursach
                 if (listView2.FocusedItem.Selected)
                 {
                     //Находим метод
-                    foreach (C_Methods m in meths)
+                    foreach (C_Methods m in temp.Methods)
                     {
                         if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                         {
@@ -689,6 +698,14 @@ namespace Kursach
             {
                 Delete(sender);
             }
+        }
+
+        private void сохранитьToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            f.Classes[index].Methods = temp.Methods;
+            f.Classes[index].Variables = temp.Variables;
+            f.Redraw();
+            this.Close();
         }
 
     }

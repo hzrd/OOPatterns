@@ -169,5 +169,37 @@ namespace Kursach
             Redraw();
         }
 
+        private void generate_code_button_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog f = new FolderBrowserDialog();
+            string path = "";
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                foreach (ClassBox c in Classes)
+                {
+                    StreamWriter sw = new StreamWriter(f.SelectedPath+"\\"+c.ClassName + ".txt");
+                    sw.WriteLine("Class " + c.ClassName);
+                    sw.WriteLine("{");
+                    foreach (C_Variables v in c.Variables)
+                        sw.WriteLine(v.Type + " " + v.Name + ";");
+                    sw.WriteLine();
+                    foreach (C_Methods m in c.Methods)
+                    {
+                        sw.Write(m.Type + " " + m.Name + "( ");
+                        string vars = "";
+                        foreach (C_Variables mv in m.Variables)
+                        {
+                            vars += mv.Type + " " + mv.Name + ", ";
+                        }
+                        vars = vars.Remove(vars.Length - 2, 2);
+                        sw.WriteLine(vars + " );");
+                        sw.WriteLine();
+                    }
+                    sw.WriteLine("}");
+                    sw.Close();
+                }
+            }
+        }
+
     }
 }
