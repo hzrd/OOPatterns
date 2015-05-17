@@ -16,7 +16,7 @@ namespace Kursach
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UML_diagram_form());
+            Application.Run(new Main());
         }
     }
 }

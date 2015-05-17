@@ -13,7 +13,8 @@ namespace Kursach
         public int Y{set;get;}
         public int Width{set;get;}
         public int Height { set; get; }
-        Pen Contour,Select,black;
+
+        Pen Border,Select,black;
         SolidBrush Background;
 
         string Name;
@@ -21,9 +22,9 @@ namespace Kursach
         public List<C_Methods> Methods = new List<C_Methods>();
         public static int Count = 0;
 
-        bool isSelected;
-        bool Agregation;
-        ClassBox AgregatedClassBox;
+        public bool isSelected { set; get; }
+        public bool isAgregated { set; get; }
+
 
 
         public ClassBox(int PosX, int PosY, int Width, int Height)
@@ -35,11 +36,11 @@ namespace Kursach
             this.Height = Height;
             Name = "Class " + Count;
             Count++;
-            Contour = new Pen(new SolidBrush(Color.Black),2);
+            Border = new Pen(new SolidBrush(Color.Black),2);
             Select = new Pen(new SolidBrush(Color.LightGreen),2);
             black = new Pen(new SolidBrush(Color.Black));
             Background = new SolidBrush(Color.LightBlue);
-            Agregation = false;
+            isAgregated = false;
             isSelected = false;
         }
 
@@ -52,11 +53,9 @@ namespace Kursach
         {
             Rectangle R = new Rectangle(X, Y, Width, Height);
             g.FillRectangle(Background, R);
-            g.DrawRectangle(Contour, R);           
+            g.DrawRectangle(Border, R);           
             if (isSelected)
                 g.DrawRectangle(Select, R);
-            if (Agregation)
-                DrawAgregation(g);
             g.DrawString(Name, new Font("Arial",10), new SolidBrush(Color.Black), R.X+2, R.Y+2);
             int dY = 17;
             foreach (C_Variables cv in Variables)
@@ -75,11 +74,9 @@ namespace Kursach
         {
             Rectangle R = new Rectangle(PosX, PosY, Width, Height);
             g.FillRectangle(Background, R);
-            g.DrawRectangle(Contour, R);
+            g.DrawRectangle(Border, R);
             if (isSelected)
                 g.DrawRectangle(Select, R);
-            if (Agregation)
-                DrawAgregation(g);
             g.DrawString(Name, new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + 2);
             int dY = 17;
             foreach (C_Variables cv in Variables)
@@ -94,18 +91,18 @@ namespace Kursach
             }
         }
 
-        public void DrawAgregation(Graphics g)
-        {
-            if ((X < AgregatedClassBox.X - Width))
-                g.DrawLine(black, X + Width, Y + Height / 2, AgregatedClassBox.X, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
-            else if ((X+Width >= AgregatedClassBox.X) && (X <= AgregatedClassBox.X + AgregatedClassBox.Width))
-                if (Y < AgregatedClassBox.Y)
-                    g.DrawLine(black, X + Width / 2, Y + Height, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y);
-                else
-                    g.DrawLine(black, X + Width / 2, Y, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y + Height);
-            else
-                g.DrawLine(black, X, Y + Height / 2, AgregatedClassBox.X+AgregatedClassBox.Width, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
-        }
+        //public void DrawAgregation(Graphics g)
+        //{
+        //    if ((X < AgregatedClassBox.X - Width))
+        //        g.DrawLine(black, X + Width, Y + Height / 2, AgregatedClassBox.X, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
+        //    else if ((X+Width >= AgregatedClassBox.X) && (X <= AgregatedClassBox.X + AgregatedClassBox.Width))
+        //        if (Y < AgregatedClassBox.Y)
+        //            g.DrawLine(black, X + Width / 2, Y + Height, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y);
+        //        else
+        //            g.DrawLine(black, X + Width / 2, Y, AgregatedClassBox.X + AgregatedClassBox.Width / 2, AgregatedClassBox.Y + Height);
+        //    else
+        //        g.DrawLine(black, X, Y + Height / 2, AgregatedClassBox.X+AgregatedClassBox.Width, AgregatedClassBox.Y + AgregatedClassBox.Height / 2);
+        //}
 
         public void TestValues()
         {
@@ -130,25 +127,6 @@ namespace Kursach
         {
             set { Name = value; }
             get { return Name; }
-        }
-
-
-        public bool Selected
-        {
-            set { isSelected = value; }
-            get { return isSelected; }
-        }
-
-        public bool Agregated
-        {
-            set { Agregation = value; }
-            get { return Agregation; }
-        }
-
-        public ClassBox AgregatedClass
-        {
-            set { AgregatedClassBox = value; }
-            get { return AgregatedClassBox; }
         }
         
     }
