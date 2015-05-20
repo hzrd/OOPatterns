@@ -27,13 +27,12 @@ namespace Kursach
             InitializeComponent();
         }
 
-        private void Add_class_button_Click(object sender, EventArgs e)
+        private bool CheckFreePosition()
         {
-            //Алгоритм проверки свободного места на диаграмме. Находит позицию с координатами PosX, PosY в которой можно рисовать объект---------
             bool free = true;
-            for (PosY=5; PosY < pictureBox1.Height; PosY += 10)
+            for (PosY = 5; PosY < pictureBox1.Height; PosY += 10)
             {
-                for (PosX=5; PosX < pictureBox1.Width; PosX += 10)
+                for (PosX = 5; PosX < pictureBox1.Width; PosX += 10)
                 {
                     free = true;
                     foreach (ClassBox c in Classes)
@@ -50,11 +49,18 @@ namespace Kursach
                 if (free)
                     break;
             }
+            return free;
+        }
+
+        private void Add_class_button_Click(object sender, EventArgs e)
+        {
+            //Алгоритм проверки свободного места на диаграмме. Находит позицию с координатами PosX, PosY в которой можно рисовать объект---------
+            
             //---------------------------------------------------------------------------------------------------------------------------
 
             try
             {
-                if (!free)
+                if (!CheckFreePosition())
                 {
                     throw new Exception("MESTA NETU #$!@%");
                 }
@@ -126,7 +132,7 @@ namespace Kursach
                     if (index1 != index2)
                     {
                         Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
-                        Classes[index2].Variables.Add(new C_Variables(Classes[index1].ClassName, Classes[index1].ClassName.ToLower()));
+                        Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
                     }
                     else
                     {
@@ -225,26 +231,29 @@ namespace Kursach
             {
                 foreach (ClassBox c in Classes)
                 {
-                    StreamWriter sw = new StreamWriter(f.SelectedPath+"\\"+c.ClassName + ".txt");
-                    sw.WriteLine("Class " + c.ClassName);
-                    sw.WriteLine("{");
-                    foreach (C_Variables v in c.Variables)
-                        sw.WriteLine(v.Type + " " + v.Name + ";");
-                    sw.WriteLine();
-                    foreach (C_Methods m in c.Methods)
-                    {
-                        sw.Write(m.Type + " " + m.Name + "( ");
-                        string vars = "";
-                        foreach (C_Variables mv in m.Variables)
-                        {
-                            vars += mv.Type + " " + mv.Name + ", ";
-                        }
-                        vars = vars.Remove(vars.Length - 2, 2);
-                        sw.WriteLine(vars + " );");
-                        sw.WriteLine();
-                    }
-                    sw.WriteLine("}");
-                    sw.Close();
+                    //StreamWriter sw = new StreamWriter(f.SelectedPath + "\\" + c.ClassName + ".txt");
+                    //sw.WriteLine("Class " + c.ClassName);
+                    //sw.WriteLine("{");
+                    //foreach (C_Variables v in c.Variables)
+                    //    sw.WriteLine(v.Type + " " + v.Name + ";");
+                    //sw.WriteLine();
+                    //foreach (C_Methods m in c.Methods)
+                    //{
+                    //    sw.Write(m.Type + " " + m.Name + "( ");
+                    //    string vars = "";
+                    //    foreach (C_Variables mv in m.Variables)
+                    //    {
+                    //        vars += mv.Type + " " + mv.Name + ", ";
+                    //    }
+                    //    vars = vars.Remove(vars.Length - 2, 2);
+                    //    sw.WriteLine(vars + " );");
+                    //    sw.WriteLine();
+                    //}
+                    //sw.WriteLine("}");
+                    //sw.Close();
+
+                    CodeGeneration_module cgmWrite = new CodeGeneration_module();
+                    cgmWrite.CodeToFile(c.Name, c.Variables, c.Methods, f.SelectedPath);
                 }
             }
         }
@@ -252,6 +261,39 @@ namespace Kursach
         private void addAgregationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             setAgregation = true;
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            CodeGeneration_module cgmRead = new CodeGeneration_module();
+            List<_Class> lc = new List<_Class>();
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string[] masFiles = Directory.GetFiles(fbd.SelectedPath);
+                foreach (string file in masFiles)
+                {
+                    if (file.Remove(0, file.LastIndexOf('.') + 1) == "h")
+                    {
+                        try
+                        {
+                            if (CheckFreePosition()) 
+                            Classes.Add(cgmRead.ReadFile(file));
+                            Classes[Classes.Count - 1].X = PosX;
+                            Classes[Classes.Count - 1].Y = PosY;
+                            Classes[Classes.Count - 1].Width = 100;
+                            Classes[Classes.Count - 1].Height = 150;
+                        }
+                        catch (Exception ex)
+                        {
+                            //MessageBox.Show("В данной версии продукта не поддерживается ввод переменных в метод без указания имени переменной! \nФайл:" + file);
+                            MessageBox.Show("Возникла ошибка, связанная со структурой файла!\nВ данной версии продукта не поддерживается ввод переменных в метод без указания имени переменной! \nФайл:" + file,
+                                            "Внимание!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        }
+                    }
+                    Redraw();
+                }
+            }
         }
 
     }

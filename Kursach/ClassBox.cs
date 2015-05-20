@@ -17,7 +17,7 @@ namespace Kursach
         Pen Border,Select,black;
         SolidBrush Background;
 
-        string Name;
+        public string Name { set; get; }
         public List<C_Variables> Variables = new List<C_Variables>();
         public List<C_Methods> Methods = new List<C_Methods>();
         public static int Count = 0;
@@ -25,7 +25,16 @@ namespace Kursach
         public bool isSelected { set; get; }
         public bool isAgregated { set; get; }
 
-
+        public ClassBox()
+        {
+            Count++;
+            Border = new Pen(new SolidBrush(Color.Black), 2);
+            Select = new Pen(new SolidBrush(Color.LightGreen), 2);
+            black = new Pen(new SolidBrush(Color.Black));
+            Background = new SolidBrush(Color.LightBlue);
+            isAgregated = false;
+            isSelected = false;
+        }
 
         public ClassBox(int PosX, int PosY, int Width, int Height)
         {
@@ -47,6 +56,14 @@ namespace Kursach
         ~ClassBox()
         {
             Count--;
+        }
+
+        public void AddListVariables(List<C_Variables> _lcv)
+        {
+            foreach (C_Variables cv in _lcv)
+            {
+                Variables.Add(new C_Variables(cv.Type, cv.Name));
+            }
         }
 
         public void draw(Graphics g)
@@ -93,12 +110,6 @@ namespace Kursach
         {
             if (Name.Length * 7 > Width)
                 Width = Name.Length * 7;
-        }
-
-        public string ClassName
-        {
-            set { Name = value; }
-            get { return Name; }
         }
         
     }
