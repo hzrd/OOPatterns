@@ -171,7 +171,12 @@ namespace Kursach
                 {
                     break;
                 }
-                if (mas[i] == "virtual" || mas[i] == "friend")
+                if (mas[i] == "virtual")
+                {
+                    temp.Virtual = true;
+                    continue;
+                }
+                if (mas[i] == "friend")
                 {
                     continue;
                 }
@@ -221,19 +226,25 @@ namespace Kursach
             }
             string[] _masValues = tempValues.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             //Находим тип и имя метода
-            string type_method = _masValues[0];
+            int indexVirtual = 0;
+            if (temp.Virtual)
+            {
+                indexVirtual++;
+            }
+            string type_method = _masValues[indexVirtual];
+            indexVirtual++;
             SwapType(ref type_method, true);
             string name_method = string.Empty;
             bool find = false;
-            int index = 2;
+            int index = indexVirtual + 1;
 
-            if (_masValues[1].LastIndexOf('(') == -1)
+            if (_masValues[indexVirtual].LastIndexOf('(') == -1)
             {
-                name_method = _masValues[1];
+                name_method = _masValues[indexVirtual];
             }
             else
             {
-                name_method = _masValues[1].Remove(_masValues[1].LastIndexOf('('));
+                name_method = _masValues[indexVirtual].Remove(_masValues[indexVirtual].LastIndexOf('('));
                 find = true;
             }
             temp.Type = type_method;
@@ -243,10 +254,10 @@ namespace Kursach
             string name_var = string.Empty;
             if (find)
             {
-                type_var = _masValues[1].Remove(0, _masValues[1].LastIndexOf('(') + 1);
-                name_var = _masValues[2];
+                type_var = _masValues[indexVirtual].Remove(0, _masValues[indexVirtual].LastIndexOf('(') + 1);
+                name_var = _masValues[indexVirtual + 1];
                 temp.AddVariable(new C_Variables(type_var, name_var));
-                index = 3;
+                index = indexVirtual += 2;
             }
             for (int i = index; i < _masValues.Length; i += 2)
             {
@@ -314,10 +325,17 @@ namespace Kursach
                             temp.AddListVariables(AddVariable(_type, _masName));
                         }
                         //Если метод
-                        if (!variable && _valueInLine.Count >= 2)
+                        if (!variable && _valueInLine.Count >= 2 && _valueInLine[1][0] != '~')
                         {
                             C_Methods cm = new C_Methods();
-                            temp.Methods.Add(AddMethod(_valueInLine));
+                            if (!AddMethod(_valueInLine).Virtual)
+                            {
+                                temp.Methods.Add(AddMethod(_valueInLine));
+                            }
+                            else
+                            {
+                                temp.MethodsVirtual.Add(AddMethod(_valueInLine));
+                            }
                         }
                     }
                     else

@@ -12,8 +12,7 @@ namespace Kursach
         public string Name { get; set; }
 
         public C_Variables()
-        {
-        }
+        {}
 
         public C_Variables(string type, string name)
         {
@@ -26,6 +25,7 @@ namespace Kursach
         List<C_Variables> _variables = new List<C_Variables>();
         public string Type { set; get; }
         public string Name { set; get; }
+        public bool Virtual { get; set; }
 
         public List<C_Variables> Variables
         {
