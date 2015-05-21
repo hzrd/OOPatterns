@@ -111,11 +111,11 @@ namespace Kursach
             }
             foreach (C_Methods vm in VirtualMethods)
             {
-                string s = vm.Type + " " + vm.Name + "()";
+                string s = "virtual " + vm.Type + " " + vm.Name + "()";
                 if ((s.Length + 1) * Mult > Width)
                     Width = (s.Length + 1) * Mult;
             }
-            Height = 15 * (Variables.Count + Methods.Count+2);
+            Height = 15 * (Variables.Count + Methods.Count + VirtualMethods.Count + 2);
         }
 
         public void TestValues()
