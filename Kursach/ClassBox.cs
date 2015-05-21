@@ -109,6 +109,12 @@ namespace Kursach
                 if ((s.Length + 1) * Mult > Width)
                     Width = (s.Length + 1) * Mult;
             }
+            foreach (C_Methods vm in VirtualMethods)
+            {
+                string s = vm.Type + " " + vm.Name + "()";
+                if ((s.Length + 1) * Mult > Width)
+                    Width = (s.Length + 1) * Mult;
+            }
             Height = 15 * (Variables.Count + Methods.Count+2);
         }
 
