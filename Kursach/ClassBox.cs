@@ -20,6 +20,7 @@ namespace Kursach
         public string Name { set; get; }
         public List<C_Variables> Variables = new List<C_Variables>();
         public List<C_Methods> Methods = new List<C_Methods>();
+        public List<C_Methods> MethodsVirtual = new List<C_Methods>();
         public static int Count = 0;
 
         public bool isSelected { set; get; }
@@ -84,6 +85,11 @@ namespace Kursach
             foreach (C_Methods cm in Methods)
             {
                 g.DrawString(cm.Type + " " + cm.Name+"()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
+                dY += 15;
+            }
+            foreach (C_Methods cm in MethodsVirtual)
+            {
+                g.DrawString("virtualЕПТА " + cm.Type + " " + cm.Name + "()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
                 dY += 15;
             }
         }
