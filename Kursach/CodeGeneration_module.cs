@@ -334,7 +334,7 @@ namespace Kursach
                             }
                             else
                             {
-                                temp.MethodsVirtual.Add(AddMethod(_valueInLine));
+                                temp.VirtualMethods.Add(AddMethod(_valueInLine));
                             }
                         }
                     }
