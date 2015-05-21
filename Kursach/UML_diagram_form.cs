@@ -15,11 +15,13 @@ namespace Kursach
     {
         public List<ClassBox> Classes = new List<ClassBox>();
         public List<Agregation> Agregations = new List<Agregation>();
+
+        public List<string> _pathToCreatingFile = new List<string>();
         int PosX, PosY;  //Координаты в которых будет расположен следующий объект
         int dX, dY;      //Для точного перетаскивания мышкой
         Bitmap buffImage;
         Graphics g, gBuffer;
-        bool isClicked = false;  //Нажатие мыши на объект
+        bool isClicked = false;  //Нажатие мышкой на объект
         bool setAgregation = false;
 
         public UML_diagram_form()
@@ -62,7 +64,7 @@ namespace Kursach
             {
                 if (!CheckFreePosition())
                 {
-                    throw new Exception("MESTA NETU #$!@%");
+                    throw new Exception("На полотне недостаточно места для размещения объекта!");
                 }
 
 
@@ -100,7 +102,7 @@ namespace Kursach
                     foreach (ClassBox C in Classes) //выводим объект поверх других и выделяем
                     {
                         if ((e.X > C.X) && (e.X < C.X + C.Width))       //если попали
-                            if ((e.Y > C.Y) && (e.Y < C.Y + C.Height))  //в него мышей
+                            if ((e.Y > C.Y) && (e.Y < C.Y + C.Height))  //в него мышкой
                             {
                                 isClicked = true;
                                 dX = e.X - C.X;
@@ -131,17 +133,21 @@ namespace Kursach
                     }
                     if (index1 != index2)
                     {
-                        Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
-                        Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
+                        try
+                        {
+                            Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
+                            Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show("Нужно выбрать объект!");
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Ну ты совсем дибил!");
+                        MessageBox.Show("Нельзя агрегировать самого себя!");
                     }
-                    setAgregation = false;
-                
-                    
-                    
+                    setAgregation = false;                   
                 }
                 Redraw();
                 //----------------------------------------------------
@@ -229,31 +235,12 @@ namespace Kursach
             FolderBrowserDialog f = new FolderBrowserDialog();
             if (f.ShowDialog() == DialogResult.OK)
             {
+                CodeGeneration_module cgmWrite = new CodeGeneration_module();
                 foreach (ClassBox c in Classes)
                 {
-                    //StreamWriter sw = new StreamWriter(f.SelectedPath + "\\" + c.ClassName + ".txt");
-                    //sw.WriteLine("Class " + c.ClassName);
-                    //sw.WriteLine("{");
-                    //foreach (C_Variables v in c.Variables)
-                    //    sw.WriteLine(v.Type + " " + v.Name + ";");
-                    //sw.WriteLine();
-                    //foreach (C_Methods m in c.Methods)
-                    //{
-                    //    sw.Write(m.Type + " " + m.Name + "( ");
-                    //    string vars = "";
-                    //    foreach (C_Variables mv in m.Variables)
-                    //    {
-                    //        vars += mv.Type + " " + mv.Name + ", ";
-                    //    }
-                    //    vars = vars.Remove(vars.Length - 2, 2);
-                    //    sw.WriteLine(vars + " );");
-                    //    sw.WriteLine();
-                    //}
-                    //sw.WriteLine("}");
-                    //sw.Close();
-
-                    CodeGeneration_module cgmWrite = new CodeGeneration_module();
                     cgmWrite.CodeToFile(c.Name, c.Variables, c.Methods, f.SelectedPath);
+                    _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".h");
+                    _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".cpp");
                 }
             }
         }
@@ -266,7 +253,6 @@ namespace Kursach
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             CodeGeneration_module cgmRead = new CodeGeneration_module();
-            List<_Class> lc = new List<_Class>();
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             if (fbd.ShowDialog() == DialogResult.OK)
             {
@@ -286,7 +272,6 @@ namespace Kursach
                         }
                         catch (Exception ex)
                         {
-                            //MessageBox.Show("В данной версии продукта не поддерживается ввод переменных в метод без указания имени переменной! \nФайл:" + file);
                             MessageBox.Show("Возникла ошибка, связанная со структурой файла!\nВ данной версии продукта не поддерживается ввод переменных в метод без указания имени переменной! \nФайл:" + file,
                                             "Внимание!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                         }

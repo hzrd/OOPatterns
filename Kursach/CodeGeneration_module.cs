@@ -7,46 +7,6 @@ using System.IO;
 
 namespace Kursach
 {
-    public class _Class
-    {
-        public string _nameClass { set; get; }
-        List<C_Variables> _variables = new List<C_Variables>();
-        List<C_Methods> _methods = new List<C_Methods>();
-
-        public _Class()
-        {
-            _nameClass = "";
-        }
-        public _Class(string _name)
-        {
-            _nameClass = _name;
-        }
-        public void AddVariable(C_Variables _var)
-        {
-            _variables.Add(_var);
-        }
-        public void AddListVariables(List<C_Variables> _lcv)
-        {
-            foreach (C_Variables cv in _lcv)
-            {
-                _variables.Add(new C_Variables(cv.Type, cv.Name));
-            }
-        }
-        public void AddMethod(C_Methods _meth)
-        {
-            _methods.Add(_meth);
-        }
-
-        public List<C_Variables> Variables
-        {
-            get { return _variables; }
-            set { _variables = value; }
-        }
-        public List<C_Methods> Methods
-        {
-            get { return _methods; }
-        }
-    }
     public class CodeGeneration_module
     {
         private bool SwapType(ref string _type, bool _cppFile)
@@ -211,7 +171,7 @@ namespace Kursach
                 {
                     break;
                 }
-                if (mas[i] == "virtual")
+                if (mas[i] == "virtual" || mas[i] == "friend")
                 {
                     continue;
                 }

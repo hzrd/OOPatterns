@@ -29,6 +29,7 @@ namespace Kursach
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             udf.Hide();
+            cf.AddFiles(udf);
             cf.Show();
         }
 

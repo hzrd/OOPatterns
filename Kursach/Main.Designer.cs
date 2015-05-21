@@ -73,6 +73,7 @@
             this.ClientSize = new System.Drawing.Size(923, 447);
             this.Controls.Add(this.toolStrip1);
             this.IsMdiContainer = true;
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "Main";
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load);
