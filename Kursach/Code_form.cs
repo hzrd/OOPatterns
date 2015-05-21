@@ -24,7 +24,6 @@ namespace Kursach
             foreach (string _path in udf._pathToCreatingFile)
             {
                 ListViewItem lvi = new ListViewItem(_path.Remove(0,_path.LastIndexOf('\\') + 1));
-                MessageBox.Show(_path);
                 lvi.SubItems.Add(_path);
                 listView1.Items.Add(lvi);
             }

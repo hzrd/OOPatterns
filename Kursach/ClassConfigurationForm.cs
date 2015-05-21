@@ -195,7 +195,7 @@ namespace Kursach
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Не выбран элемент для удаления!");
             }
@@ -528,7 +528,7 @@ namespace Kursach
                     button3.Enabled = false;
                 }
             }
-            catch(Exception ex)
+            catch
             {
                 //...
             }
@@ -595,7 +595,7 @@ namespace Kursach
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Та иди ты нахер с такими запросами. Вообще в голове ветер? Выбери ченить, че ты как не мужик..");
             }

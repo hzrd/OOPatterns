@@ -90,6 +90,19 @@ namespace Kursach
 
         void Resize()
         {
+            int Mult = 8;
+            foreach(C_Variables c in Variables)
+            {
+                string s = c.Type+" "+c.Name+"()";
+                if ((s.Length + 1) * Mult > Width)
+                    Width = (s.Length + 1) * Mult;
+            }
+            foreach (C_Methods m in Methods)
+            {
+                string s = m.Type + " " + m.Name + "()";
+                if ((s.Length + 1) * Mult > Width)
+                    Width = (s.Length + 1) * Mult;
+            }
             Height = 15 * (Variables.Count + Methods.Count+2);
         }
 

@@ -29,7 +29,8 @@ namespace Kursach
             InitializeComponent();
         }
 
-        private bool CheckFreePosition()
+        //Алгоритм проверки свободного места на диаграмме. Находит позицию с координатами PosX, PosY в которой можно рисовать объект---------
+        private bool GetFreePosition()
         {
             bool free = true;
             for (PosY = 5; PosY < pictureBox1.Height; PosY += 10)
@@ -55,22 +56,15 @@ namespace Kursach
         }
 
         private void Add_class_button_Click(object sender, EventArgs e)
-        {
-            //Алгоритм проверки свободного места на диаграмме. Находит позицию с координатами PosX, PosY в которой можно рисовать объект---------
-            
-            //---------------------------------------------------------------------------------------------------------------------------
-
+        {           
             try
             {
-                if (!CheckFreePosition())
+                if (!GetFreePosition())
                 {
                     throw new Exception("На полотне недостаточно места для размещения объекта!");
                 }
-
-
                 //Если есть место то добавляем объект-----------
                 Classes.Add(new ClassBox(PosX, PosY, 100, 100));
-                Classes[ClassBox.Count - 1].draw(gBuffer);
 
                 if ((PosX + 210) < pictureBox1.Width)
                     PosX += 110;
@@ -79,8 +73,9 @@ namespace Kursach
                     PosX = 5;
                     PosY += 110;
                 }
+                Redraw();
+                Redraw();
 
-                g.DrawImage(buffImage, 0, 0);
             }
             catch (Exception ex)
             {
@@ -138,7 +133,7 @@ namespace Kursach
                             Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
                             Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
                         }
-                        catch(Exception ex)
+                        catch
                         {
                             MessageBox.Show("Нужно выбрать объект!");
                         }
@@ -206,10 +201,10 @@ namespace Kursach
             {
                 g.DrawImage(buffImage, 0, 0);
             }
-            catch 
+            catch
             {
                 gBuffer = Graphics.FromImage(buffImage);
-                g = pictureBox1.CreateGraphics(); 
+                g = pictureBox1.CreateGraphics();
             }
         }
 
@@ -263,14 +258,14 @@ namespace Kursach
                     {
                         try
                         {
-                            if (CheckFreePosition()) 
+                            if (GetFreePosition()) 
                             Classes.Add(cgmRead.ReadFile(file));
                             Classes[Classes.Count - 1].X = PosX;
                             Classes[Classes.Count - 1].Y = PosY;
                             Classes[Classes.Count - 1].Width = 100;
                             Classes[Classes.Count - 1].Height = 150;
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             MessageBox.Show("Возникла ошибка, связанная со структурой файла!\nВ данной версии продукта не поддерживается ввод переменных в метод без указания имени переменной! \nФайл:" + file,
                                             "Внимание!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
@@ -281,5 +276,43 @@ namespace Kursach
             }
         }
 
+
+        private void DeleteFromDiagram()
+        {
+            bool findSomething = false;
+            int index = 0;
+            foreach (ClassBox c in Classes)
+            {
+                if (c.isSelected)
+                {
+                    findSomething = true;
+                    break;
+                }
+                index++;
+            }
+            if (findSomething)
+            {
+                if (MessageBox.Show("Вы действительно хотите удалить " + Classes[index].Name + " ?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Classes.RemoveAt(index);
+                    Redraw();
+                }
+            }
+            else
+                MessageBox.Show("Ничего не выбрано");
+        }
+
+        private void UML_diagram_form_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                DeleteFromDiagram();
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteFromDiagram();
+        }
     }
 }
