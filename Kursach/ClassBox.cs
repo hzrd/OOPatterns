@@ -89,7 +89,7 @@ namespace Kursach
             }
             foreach (C_Methods cm in MethodsVirtual)
             {
-                g.DrawString("virtualЕПТА " + cm.Type + " " + cm.Name + "()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
+                g.DrawString("virtual " + cm.Type + " " + cm.Name + "()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
                 dY += 15;
             }
         }
