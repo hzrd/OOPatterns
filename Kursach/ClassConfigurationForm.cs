@@ -14,15 +14,17 @@ namespace Kursach
     public partial class ClassConfigurationForm : Form
     {
         Graphics g;
+        //Индекс класса, с которым работаем
         int index;
+        //Ссылка на форму
         UML_diagram_form f;
+        //Рисунок объекта 
         Bitmap bmp;
+
+        //Временный объект для редактирования
         ClassBox temp;
 
-        //Массив переменных и методов
-        List<C_Variables> vars = new List<C_Variables>();
-        List<C_Methods> meths = new List<C_Methods>();
-
+        //Вспомогательная переменная для ввода символов в textBox
         bool backspace = false;
 
         public ClassConfigurationForm()
@@ -55,8 +57,10 @@ namespace Kursach
             {
                 AddMethods(m);
             }
+            temp.Name = f.Classes[index].Name;
             g = Graphics.FromImage(bmp);
             temp.draw(g);
+            textBox4.Text = temp.Name;
             pictureBox1.Image = bmp;
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -177,6 +181,7 @@ namespace Kursach
                         if (dialogResult == DialogResult.Yes)
                         {
                             DeleteMethod(listView2.FocusedItem.SubItems[1].Text);
+                            listView3.Items.Clear();
                         }
                     }
                 }
@@ -647,6 +652,11 @@ namespace Kursach
             CheckSymbol(e, textBox3.Text.Length);
         }
 
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CheckSymbol(e, textBox4.Text.Length);
+        }
+
         private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             backspace = false;
@@ -674,8 +684,17 @@ namespace Kursach
             }
         }
 
+        private void textBox4_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            backspace = false;
+            if (e.KeyData == Keys.Back)
+            {
+                backspace = true;
+            }
+        }
+
         //---------------------------------------------------------------------------------------------------------------------------------------------------
-        //--------------------------------------Обработка нажатия Del для удаления имени переменной/метода---------------------------------------------------
+        //--------------------------------------Обработка нажатия Del для удаления имени, переменной/метода---------------------------------------------------
         private void listView1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyData == Keys.Delete)
@@ -704,8 +723,15 @@ namespace Kursach
         {
             f.Classes[index].Methods = temp.Methods;
             f.Classes[index].Variables = temp.Variables;
+            f.Classes[index].Name = temp.Name;
             f.Redraw();
             this.Close();
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            temp.Name = textBox4.Text;
         }
 
     }

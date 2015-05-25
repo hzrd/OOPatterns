@@ -71,17 +71,40 @@ namespace Kursach
         {
             Resize();
             Rectangle R = new Rectangle(X, Y, Width, Height);
-            g.FillRectangle(Background, R);
-            g.DrawRectangle(Border, R);           
+            if (Methods.Count == 0 && VirtualMethods.Count != 0)
+            {
+                g.FillRectangle(new SolidBrush(Color.LightYellow), R);
+            }
+            else
+            {
+                g.FillRectangle(Background, R);
+            }
             if (isSelected)
+            {
                 g.DrawRectangle(Select, R);
+                g.DrawLine(Select, X, Y + 19, X + Width, Y + 19);
+            }
+            else
+            {
+                g.DrawRectangle(Border, R);
+                g.DrawLine(Border, X, Y + 19, X + Width, Y + 19);
+            }
             g.DrawString(Name, new Font("Arial",10), new SolidBrush(Color.Black), R.X+2, R.Y+2);
-            int dY = 17;
+            int dY = 19;
             foreach (C_Variables cv in Variables)
             {
                 g.DrawString(cv.Type+" "+cv.Name, new Font("Arial",10), new SolidBrush(Color.Black), R.X+2, R.Y+dY);
                 dY+=15;
             }
+            if (isSelected)
+            {
+                g.DrawLine(Select, X, Y + dY + 2, X + Width, Y + dY + 2);
+            }
+            else
+            {
+                g.DrawLine(Border, X, Y + dY + 2, X + Width, Y + dY + 2);
+            }
+            dY += 2;
             foreach (C_Methods cm in Methods)
             {
                 g.DrawString(cm.Type + " " + cm.Name+"()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
