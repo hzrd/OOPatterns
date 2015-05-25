@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Kursach
 {
@@ -96,13 +97,16 @@ namespace Kursach
                 g.DrawString(cv.Type+" "+cv.Name, new Font("Arial",10), new SolidBrush(Color.Black), R.X+2, R.Y+dY);
                 dY+=15;
             }
-            if (isSelected)
+            if (dY != 19)
             {
-                g.DrawLine(Select, X, Y + dY + 2, X + Width, Y + dY + 2);
-            }
-            else
-            {
-                g.DrawLine(Border, X, Y + dY + 2, X + Width, Y + dY + 2);
+                if (isSelected)
+                {
+                    g.DrawLine(Select, X, Y + dY + 2, X + Width, Y + dY + 2);
+                }
+                else
+                {
+                    g.DrawLine(Border, X, Y + dY + 2, X + Width, Y + dY + 2);
+                }
             }
             dY += 2;
             foreach (C_Methods cm in Methods)
@@ -119,24 +123,31 @@ namespace Kursach
 
         void Resize()
         {
-            int Mult = 8;
-            foreach(C_Variables c in Variables)
+            //Узнаем длину имени класса
+            Width = TextRenderer.MeasureText(Name, new Font("Arial", 10)).Width;
+            foreach (C_Variables c in Variables)
             {
-                string s = c.Type+" "+c.Name+"()";
-                if ((s.Length + 1) * Mult > Width)
-                    Width = (s.Length + 1) * Mult;
+                int temp = TextRenderer.MeasureText(c.Type + " " + c.Name, new Font("Arial", 10)).Width;
+                if (Width < temp)
+                {
+                    Width = temp;
+                }
             }
             foreach (C_Methods m in Methods)
             {
-                string s = m.Type + " " + m.Name + "()";
-                if ((s.Length + 1) * Mult > Width)
-                    Width = (s.Length + 1) * Mult;
+                int temp = TextRenderer.MeasureText(m.Type + " " + m.Name + "()", new Font("Arial", 10)).Width;
+                if (Width < temp)
+                {
+                    Width = temp;
+                }
             }
             foreach (C_Methods vm in VirtualMethods)
             {
-                string s = "virtual " + vm.Type + " " + vm.Name + "()";
-                if ((s.Length + 1) * Mult > Width)
-                    Width = (s.Length + 1) * Mult;
+                int temp = TextRenderer.MeasureText("virtual " + vm.Type + " " + vm.Name + "()", new Font("Arial", 10)).Width;
+                if (Width < temp)
+                {
+                    Width = temp;
+                }
             }
             Height = 15 * (Variables.Count + Methods.Count + VirtualMethods.Count + 2);
         }
