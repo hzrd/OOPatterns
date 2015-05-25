@@ -218,6 +218,13 @@ namespace Kursach
                 {
                     mas[i] = mas[i].Remove(mas[i].Length - 1);
                 }
+                //Вырезаем скобочку, если встретилась и добавляем имя, тип переменной к массиву строк
+                if (mas[i].LastIndexOf('(') != -1)
+                {
+                    tempValues += mas[i].Remove(mas[i].LastIndexOf('(')) + " ";
+                    tempValues += mas[i].Remove(0, mas[i].LastIndexOf('(') + 1) + " ";
+                    continue;
+                }
                 //Перегоняем новые значения
                 if (mas[i] != "")
                 {
@@ -226,40 +233,12 @@ namespace Kursach
             }
             string[] _masValues = tempValues.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             //Находим тип и имя метода
-            int indexVirtual = 0;
-            if (temp.Virtual)
-            {
-                indexVirtual++;
-            }
-            string type_method = _masValues[indexVirtual];
-            indexVirtual++;
+            string type_method = _masValues[0];
             SwapType(ref type_method, true);
-            string name_method = string.Empty;
-            bool find = false;
-            int index = indexVirtual + 1;
-
-            if (_masValues[indexVirtual].LastIndexOf('(') == -1)
-            {
-                name_method = _masValues[indexVirtual];
-            }
-            else
-            {
-                name_method = _masValues[indexVirtual].Remove(_masValues[indexVirtual].LastIndexOf('('));
-                find = true;
-            }
             temp.Type = type_method;
-            temp.Name = name_method;
-
-            string type_var = string.Empty;
-            string name_var = string.Empty;
-            if (find)
-            {
-                type_var = _masValues[indexVirtual].Remove(0, _masValues[indexVirtual].LastIndexOf('(') + 1);
-                name_var = _masValues[indexVirtual + 1];
-                temp.AddVariable(new C_Variables(type_var, name_var));
-                index = indexVirtual += 2;
-            }
-            for (int i = index; i < _masValues.Length; i += 2)
+            temp.Name = _masValues[1];
+            //Добавляем переменные
+            for (int i = 2; i < _masValues.Length; i += 2)
             {
                 temp.AddVariable(new C_Variables(_masValues[i], _masValues[i + 1]));
             }

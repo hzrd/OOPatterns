@@ -57,6 +57,10 @@ namespace Kursach
             {
                 AddMethods(m);
             }
+            foreach(C_Methods m in f.Classes[index].VirtualMethods)
+            {
+                AddVirtualMethod(m);
+            }
             temp.Name = f.Classes[index].Name;
             g = Graphics.FromImage(bmp);
             temp.draw(g);
@@ -131,6 +135,24 @@ namespace Kursach
                 MessageBox.Show("Имя переменной не должно совпадать с системным именем!");
             }
         }
+
+        private void AddVirtualMethod(C_Methods meth)
+        {
+            if (CheckSystemName(meth.Name))
+            {
+                //Добавляем метод в list
+                temp.VirtualMethods.Add(meth);
+                //И на форму
+                ListViewItem item = new ListViewItem(meth.Type);
+                item.SubItems.Add(meth.Name);
+                listView2.Items.Add(item);
+                checkBox1.Checked = true;
+            }
+            else
+            {
+                MessageBox.Show("Имя метода не должно совпадать с системным именем!");
+            }
+        }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------Проверка на совпадение----------------------------------------------------------------------
         private int CheckList(ListView lv1, ListView lv2,string sName)
@@ -195,7 +217,14 @@ namespace Kursach
                                                                     , "Удаление переменной метода", MessageBoxButtons.YesNo);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            DeleteMethodVariables(listView2.FocusedItem.SubItems[1].Text, listView3.FocusedItem.SubItems[1].Text);
+                            if (checkBox1.Checked)
+                            {
+                                DeleteMethodVariables(listView2.FocusedItem.SubItems[1].Text, listView3.FocusedItem.SubItems[1].Text, true);
+                            }
+                            else
+                            {
+                                DeleteMethodVariables(listView2.FocusedItem.SubItems[1].Text, listView3.FocusedItem.SubItems[1].Text, false);
+                            }
                         }
                     }
                 }
@@ -223,7 +252,14 @@ namespace Kursach
         private void DeleteMethod(string sNameMethod)
         {
             //Убираем ненужный метод
-            temp.Methods.RemoveAt(temp.Methods.Count - 1);
+            for (int i = 0; i < temp.Methods.Count; i++)
+            {
+                if (temp.Methods[i].Name == sNameMethod)
+                {
+                    temp.Methods.RemoveAt(i);
+                    break;
+                }
+            }
             //Перезагружаем методы
             listView2.Items.Clear();
             foreach (C_Methods m in temp.Methods)
@@ -234,37 +270,91 @@ namespace Kursach
             }
         }
 
-        private void DeleteMethodVariables(string sNameMethod, string sNameVariable)
+        private void DeleteVirtualMethod(string sNameMethod)
+        {
+            //Убираем ненужный метод
+            for (int i = 0; i < temp.VirtualMethods.Count; i++)
+            {
+                if (temp.VirtualMethods[i].Name == sNameMethod)
+                {
+                    temp.VirtualMethods.RemoveAt(i);
+                    break;
+                }
+            }
+            //Перезагружаем методы
+            listView2.Items.Clear();
+            foreach (C_Methods m in temp.VirtualMethods)
+            {
+                ListViewItem item = new ListViewItem(m.Type);
+                item.SubItems.Add(m.Name);
+                listView2.Items.Add(item);
+            }
+        }
+
+        private void DeleteMethodVariables(string sNameMethod, string sNameVariable, bool _virtual)
         {
             int numberMethod = 0;
             int numberVariable = 0;
             //Находим нужный метод в массиве
-            for (int i = 0; i < temp.Methods.Count; i++)
+            if (!_virtual)
             {
-                if (temp.Methods[i].Name == sNameMethod)
+                for (int i = 0; i < temp.Methods.Count; i++)
                 {
-                    numberMethod = i;
-                    break;
+                    if (temp.Methods[i].Name == sNameMethod)
+                    {
+                        numberMethod = i;
+                        break;
+                    }
+                }
+                //В данном методе находим нужную переменную
+                for (int i = 0; i < temp.Methods[numberMethod].Variables.Count; i++)
+                {
+                    if (temp.Methods[numberMethod].Variables[i].Name == sNameVariable)
+                    {
+                        numberVariable = i;
+                        break;
+                    }
+                }
+                //Удаляем данную переменную
+                temp.Methods[numberMethod].DeleteVariable(temp.Methods[numberMethod].Variables[numberVariable]);
+                //Перезагружаем данные
+                listView3.Items.Clear();
+                foreach (C_Variables v in temp.Methods[numberMethod].Variables)
+                {
+                    ListViewItem item = new ListViewItem(v.Type);
+                    item.SubItems.Add(v.Name);
+                    listView3.Items.Add(item);
                 }
             }
-            //В данном методе находим нужную переменную
-            for (int i = 0; i < temp.Methods[numberMethod].Variables.Count; i++)
+            else
             {
-                if (temp.Methods[numberMethod].Variables[i].Name == sNameVariable)
+                for (int i = 0; i < temp.VirtualMethods.Count; i++)
                 {
-                    numberVariable = i;
-                    break;
+                    if (temp.VirtualMethods[i].Name == sNameMethod)
+                    {
+                        numberMethod = i;
+                        break;
+                    }
                 }
-            }
-            //Удаляем данную переменную
-            temp.Methods[numberMethod].DeleteVariable(temp.Methods[numberMethod].Variables[numberVariable]);
-            //Перезагружаем данные
-            listView3.Items.Clear();
-            foreach (C_Variables v in temp.Methods[numberMethod].Variables)
-            {
-                ListViewItem item = new ListViewItem(v.Type);
-                item.SubItems.Add(v.Name);
-                listView3.Items.Add(item);
+                //В данном методе находим нужную переменную
+                for (int i = 0; i < temp.VirtualMethods[numberMethod].Variables.Count; i++)
+                {
+                    if (temp.VirtualMethods[numberMethod].Variables[i].Name == sNameVariable)
+                    {
+                        numberVariable = i;
+                        break;
+                    }
+                }
+                //Удаляем данную переменную
+                temp.VirtualMethods[numberMethod].DeleteVariable(temp.VirtualMethods[numberMethod].Variables[numberVariable]);
+                //Перезагружаем данные
+                listView3.Items.Clear();
+                foreach (C_Variables v in temp.VirtualMethods[numberMethod].Variables)
+                {
+                    ListViewItem item = new ListViewItem(v.Type);
+                    item.SubItems.Add(v.Name);
+                    listView3.Items.Add(item);
+                }
             }
         }
         //------------------------------------------------------Обработка нажатий кнопок---------------------------------------------------------------------
@@ -335,7 +425,7 @@ namespace Kursach
                 }
             }
             g = pictureBox1.CreateGraphics();
-            g.Clear(Color.White);
+            g.Clear(Color.Silver);
             temp.draw(g);
         }
 
@@ -350,7 +440,14 @@ namespace Kursach
                 {
                     if (CheckList(listView1, listView2, meth.Name) == 1)
                     {
-                        AddMethods(meth);
+                        if (checkBox1.Checked)
+                        {
+                            AddVirtualMethod(meth);
+                        }
+                        else
+                        {
+                            AddMethods(meth);
+                        }
                         comboBox2.SelectedIndex = -1;
                         textBox2.Text = "";
                     }
@@ -372,21 +469,43 @@ namespace Kursach
                                                     , "Изменение метода", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            foreach (C_Methods m in temp.Methods)
+                            if (checkBox1.Checked)
                             {
-                                if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                foreach (C_Methods m in temp.VirtualMethods)
                                 {
-                                    m.Name = textBox2.Text;
-                                    m.Type = comboBox2.Text;
-                                    break;
+                                    if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                    {
+                                        m.Name = textBox2.Text;
+                                        m.Type = comboBox2.Text;
+                                        break;
+                                    }
+                                }
+                                listView2.Items.Clear();
+                                foreach (C_Methods m in temp.VirtualMethods)
+                                {
+                                    ListViewItem item = new ListViewItem(m.Type);
+                                    item.SubItems.Add(m.Name);
+                                    listView2.Items.Add(item);
                                 }
                             }
-                            listView2.Items.Clear();
-                            foreach (C_Methods m in temp.Methods)
+                            else
                             {
-                                ListViewItem item = new ListViewItem(m.Type);
-                                item.SubItems.Add(m.Name);
-                                listView2.Items.Add(item);
+                                foreach (C_Methods m in temp.Methods)
+                                {
+                                    if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                    {
+                                        m.Name = textBox2.Text;
+                                        m.Type = comboBox2.Text;
+                                        break;
+                                    }
+                                }
+                                listView2.Items.Clear();
+                                foreach (C_Methods m in temp.Methods)
+                                {
+                                    ListViewItem item = new ListViewItem(m.Type);
+                                    item.SubItems.Add(m.Name);
+                                    listView2.Items.Add(item);
+                                }
                             }
                             button2.Text = "+";
                             comboBox2.SelectedIndex = -1;
@@ -398,10 +517,10 @@ namespace Kursach
                 {
                     MessageBox.Show(ex.Message);
                 }
-                g = pictureBox1.CreateGraphics();
-                g.Clear(Color.White);
-                temp.draw(g);
             }
+            g = pictureBox1.CreateGraphics();
+            g.Clear(Color.Silver);
+            temp.draw(g);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -416,14 +535,30 @@ namespace Kursach
                 {
                     if (CheckList(listView3, listView2, var.Name) == 1)
                     {
-                        foreach (C_Methods m in temp.Methods)
+                        if (checkBox1.Checked)
                         {
-                            if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                            foreach (C_Methods m in temp.VirtualMethods)
                             {
-                                AddVariablesInMethods(m, var);
-                                comboBox3.SelectedIndex = -1;
-                                textBox3.Text = "";
-                                break;
+                                if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                {
+                                    AddVariablesInMethods(m, var);
+                                    comboBox3.SelectedIndex = -1;
+                                    textBox3.Text = "";
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (C_Methods m in temp.Methods)
+                            {
+                                if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                {
+                                    AddVariablesInMethods(m, var);
+                                    comboBox3.SelectedIndex = -1;
+                                    textBox3.Text = "";
+                                    break;
+                                }
                             }
                         }
                     }
@@ -447,35 +582,67 @@ namespace Kursach
                         if (dialogResult == DialogResult.Yes)
                         {
                             //Ищем нужный метод
-                            foreach (C_Methods m in temp.Methods)
+                            if (checkBox1.Checked)
                             {
-                                if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                foreach (C_Methods m in temp.VirtualMethods)
                                 {
-                                    //Ищем нужную переменную
-                                    foreach (C_Variables v in m.Variables)
+                                    if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                                     {
-                                        //Заменяем данные
-                                        if (v.Name == listView3.FocusedItem.SubItems[1].Text)
+                                        //Ищем нужную переменную
+                                        foreach (C_Variables v in m.Variables)
                                         {
-                                            v.Name = textBox3.Text;
-                                            v.Type = comboBox3.Text;
+                                            //Заменяем данные
+                                            if (v.Name == listView3.FocusedItem.SubItems[1].Text)
+                                            {
+                                                v.Name = textBox3.Text;
+                                                v.Type = comboBox3.Text;
+                                                break;
+                                            }
+                                        }
+                                        //Перезагружаем переменные
+                                        listView3.Items.Clear();
+                                        foreach (C_Variables v in m.Variables)
+                                        {
+                                            ListViewItem item = new ListViewItem(v.Type);
+                                            item.SubItems.Add(v.Name);
+                                            listView3.Items.Add(item);
                                             break;
                                         }
                                     }
-                                    //Перезагружаем переменные
-                                    listView3.Items.Clear();
-                                    foreach (C_Variables v in m.Variables)
-                                    {
-                                        ListViewItem item = new ListViewItem(v.Type);
-                                        item.SubItems.Add(v.Name);
-                                        listView3.Items.Add(item);
-                                    }
-                                    button3.Text = "+";
-                                    comboBox3.SelectedIndex = -1;
-                                    textBox3.Text = "";
-                                    break;
                                 }
                             }
+                            else
+                            {
+                                foreach (C_Methods m in temp.Methods)
+                                {
+                                    if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                                    {
+                                        //Ищем нужную переменную
+                                        foreach (C_Variables v in m.Variables)
+                                        {
+                                            //Заменяем данные
+                                            if (v.Name == listView3.FocusedItem.SubItems[1].Text)
+                                            {
+                                                v.Name = textBox3.Text;
+                                                v.Type = comboBox3.Text;
+                                                break;
+                                            }
+                                        }
+                                        //Перезагружаем переменные
+                                        listView3.Items.Clear();
+                                        foreach (C_Variables v in m.Variables)
+                                        {
+                                            ListViewItem item = new ListViewItem(v.Type);
+                                            item.SubItems.Add(v.Name);
+                                            listView3.Items.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            button3.Text = "+";
+                            comboBox3.SelectedIndex = -1;
+                            textBox3.Text = "";
                         }
                     }
                 }
@@ -484,7 +651,7 @@ namespace Kursach
                     MessageBox.Show(ex.Message);
                 }
                 g = pictureBox1.CreateGraphics();
-                g.Clear(Color.White);
+                g.Clear(Color.Silver);
                 temp.draw(g);
             }
         }
@@ -503,21 +670,45 @@ namespace Kursach
                 if (listView2.FocusedItem.Selected)
                 {
                     //Находим метод
-                    foreach (C_Methods m in temp.Methods)
+                    if (checkBox1.Checked)
                     {
-                        if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                        foreach (C_Methods m in temp.VirtualMethods)
                         {
-                            //Открываем доступ
-                            listView3.Enabled = true;
-                            comboBox3.Enabled = true;
-                            textBox3.Enabled = true;
-                            button3.Enabled = true;
-                            //Загружаем список переменных метода
-                            foreach (C_Variables v in m.Variables)
+                            if (m.Name == listView2.FocusedItem.SubItems[1].Text)
                             {
-                                ListViewItem item = new ListViewItem(v.Type);
-                                item.SubItems.Add(v.Name);
-                                listView3.Items.Add(item);
+                                //Открываем доступ
+                                listView3.Enabled = true;
+                                comboBox3.Enabled = true;
+                                textBox3.Enabled = true;
+                                button3.Enabled = true;
+                                //Загружаем список переменных метода
+                                foreach (C_Variables v in m.Variables)
+                                {
+                                    ListViewItem item = new ListViewItem(v.Type);
+                                    item.SubItems.Add(v.Name);
+                                    listView3.Items.Add(item);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (C_Methods m in temp.Methods)
+                        {
+                            if (m.Name == listView2.FocusedItem.SubItems[1].Text)
+                            {
+                                //Открываем доступ
+                                listView3.Enabled = true;
+                                comboBox3.Enabled = true;
+                                textBox3.Enabled = true;
+                                button3.Enabled = true;
+                                //Загружаем список переменных метода
+                                foreach (C_Variables v in m.Variables)
+                                {
+                                    ListViewItem item = new ListViewItem(v.Type);
+                                    item.SubItems.Add(v.Name);
+                                    listView3.Items.Add(item);
+                                }
                             }
                         }
                     }
@@ -723,6 +914,7 @@ namespace Kursach
         {
             f.Classes[index].Methods = temp.Methods;
             f.Classes[index].Variables = temp.Variables;
+            f.Classes[index].VirtualMethods = temp.VirtualMethods;
             f.Classes[index].Name = temp.Name;
             f.Redraw();
             this.Close();
@@ -734,5 +926,27 @@ namespace Kursach
             temp.Name = textBox4.Text;
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            listView2.Items.Clear();
+            if (checkBox1.Checked)
+            {
+                foreach (C_Methods m in temp.VirtualMethods)
+                {
+                    ListViewItem item = new ListViewItem(m.Type);
+                    item.SubItems.Add(m.Name);
+                    listView2.Items.Add(item);
+                }
+            }
+            else
+            {
+                foreach (C_Methods m in temp.Methods)
+                {
+                    ListViewItem item = new ListViewItem(m.Type);
+                    item.SubItems.Add(m.Name);
+                    listView2.Items.Add(item);
+                }
+            }
+        }
     }
 }
