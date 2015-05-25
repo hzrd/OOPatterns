@@ -233,7 +233,7 @@ namespace Kursach
                 CodeGeneration_module cgmWrite = new CodeGeneration_module();
                 foreach (ClassBox c in Classes)
                 {
-                    cgmWrite.CodeToFile(c.Name, c.Variables, c.Methods, f.SelectedPath);
+                    cgmWrite.CodeToFile(c, f.SelectedPath);
                     _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".h");
                     _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".cpp");
                 }

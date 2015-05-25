@@ -55,7 +55,7 @@ namespace Kursach
             }
             return false;
         }
-        public List<string> CodeH(string _NameClass, List<C_Variables> variables, List<C_Methods> methods)
+        public List<string> CodeH(string _NameClass, List<C_Variables> variables, List<C_Methods> methods, List<C_Methods> virtualMethods)
         {
             List<string> temp = new List<string>();
             temp.Add("#include <iostream.h>");
@@ -97,6 +97,29 @@ namespace Kursach
                 tempString += ");";
                 temp.Add(tempString);
             }
+            foreach (C_Methods vcm in virtualMethods)
+            {
+                string tempString = string.Empty;
+
+                tempType = vcm.Type;
+                SwapType(ref tempType, false);
+                vcm.Type = tempType;
+                tempString += "\t" + "virtual " + vcm.Type + " " + vcm.Name + "(";
+                foreach (C_Variables var in vcm.Variables)
+                {
+                    tempType = var.Type;
+                    SwapType(ref tempType, false);
+                    var.Type = tempType;
+
+                    tempString += var.Type + " " + var.Name + ", ";
+                }
+                if (tempString[tempString.Length - 2] == ',')
+                {
+                    tempString = tempString.Remove(tempString.Length - 2);
+                }
+                tempString += ") = 0;";
+                temp.Add(tempString);
+            }
             temp.Add("}");
             return temp;
         }
@@ -130,19 +153,19 @@ namespace Kursach
             return temp;
         }
 
-        public void CodeToFile(string _NameClass, List<C_Variables> variables, List<C_Methods> methods, string path)
+        public void CodeToFile(ClassBox cb, string path)
         {
-            using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + _NameClass + ".h"))
+            using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".h"))
             {
-                foreach (string arg in CodeH(_NameClass, variables, methods))
+                foreach (string arg in CodeH(cb.Name, cb.Variables, cb.Methods, cb.VirtualMethods))
                 {
                     file.WriteLine(arg);
                 }
                 file.Close();
             }
-            using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + _NameClass + ".cpp"))
+            using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".cpp"))
             {
-                foreach (string arg in CodeCpp(_NameClass, methods))
+                foreach (string arg in CodeCpp(cb.Name, cb.Methods))
                 {
                     file.WriteLine(arg);
                 }
