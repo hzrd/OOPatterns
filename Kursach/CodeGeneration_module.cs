@@ -153,7 +153,7 @@ namespace Kursach
             return temp;
         }
 
-        public void CodeToFile(ClassBox cb, string path)
+        public void CodeToFile(ClassBox cb, string path, bool _interface)
         {
             using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".h"))
             {
@@ -163,13 +163,16 @@ namespace Kursach
                 }
                 file.Close();
             }
-            using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".cpp"))
+            if (!_interface)
             {
-                foreach (string arg in CodeCpp(cb.Name, cb.Methods))
+                using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".cpp"))
                 {
-                    file.WriteLine(arg);
+                    foreach (string arg in CodeCpp(cb.Name, cb.Methods))
+                    {
+                        file.WriteLine(arg);
+                    }
+                    file.Close();
                 }
-                file.Close();
             }
         }
 
