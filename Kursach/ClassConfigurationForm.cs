@@ -175,6 +175,16 @@ namespace Kursach
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------Удаление переменных и методов-------------------------------------------------------------------
+        private void EnabledListView3()
+        {
+            listView3.Items.Clear();
+            comboBox3.SelectedIndex = -1;
+            textBox3.Text = "";
+            listView3.Enabled = false;
+            comboBox3.Enabled = false;
+            textBox3.Enabled = false;
+            button3.Enabled = false;
+        }
         private void Delete(object sender)
         {
             try
@@ -203,7 +213,7 @@ namespace Kursach
                         if (dialogResult == DialogResult.Yes)
                         {
                             DeleteMethod(listView2.FocusedItem.SubItems[1].Text);
-                            listView3.Items.Clear();
+                            EnabledListView3();
                         }
                     }
                 }
@@ -716,12 +726,7 @@ namespace Kursach
                 else
                 {
                     //Иначе делаем недоступными
-                    comboBox3.SelectedIndex = -1;
-                    textBox3.Text = "";
-                    listView3.Enabled = false;
-                    comboBox3.Enabled = false;
-                    textBox3.Enabled = false;
-                    button3.Enabled = false;
+                    EnabledListView3();
                 }
             }
             catch
@@ -749,12 +754,12 @@ namespace Kursach
         //------------------------------------------------------Обработка кнопки ToolStrip-------------------------------------------------------------------
         private void добавитьСвойТипДляПеременнойToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Даже не трогай меня больше :) \nNumber of lines of code at the moment: 666.\nNumber after writing the code for this button: ~999");
+            MessageBox.Show("Даже не трогай меня больше :) \nNumber of lines of code at the moment: 950.\nNumber after writing the code for this button: ~999.\nComming soon:)");
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void сохранитьToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            Application.Exit();
+            Save();
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------------------Обработка контекстного меню------------------------------------------------------------------
@@ -892,6 +897,10 @@ namespace Kursach
             {
                 Delete(sender);
             }
+            if (e.Control == true && e.KeyCode == Keys.S)
+            {
+                Save();
+            }
         }
 
         private void listView2_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -899,6 +908,10 @@ namespace Kursach
             if (e.KeyData == Keys.Delete)
             {
                 Delete(sender);
+            }
+            if (e.Control == true && e.KeyCode == Keys.S)
+            {
+                Save();
             }
         }
 
@@ -908,19 +921,14 @@ namespace Kursach
             {
                 Delete(sender);
             }
-        }
-
-        private void сохранитьToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            f.Classes[index].Methods = temp.Methods;
-            f.Classes[index].Variables = temp.Variables;
-            f.Classes[index].VirtualMethods = temp.VirtualMethods;
-            f.Classes[index].Name = temp.Name;
-            f.Redraw();
-            this.Close();
+            if (e.Control == true && e.KeyCode == Keys.S)
+            {
+                Save();
+            }
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------Имя, виртуальные методы---------------------------------------------------------------------------
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
             temp.Name = textBox4.Text;
@@ -947,6 +955,17 @@ namespace Kursach
                     listView2.Items.Add(item);
                 }
             }
+            EnabledListView3();
+        }
+
+        private void Save()
+        {
+            f.Classes[index].Methods = temp.Methods;
+            f.Classes[index].Variables = temp.Variables;
+            f.Classes[index].VirtualMethods = temp.VirtualMethods;
+            f.Classes[index].Name = temp.Name;
+            f.Redraw();
+            this.Close();
         }
     }
 }

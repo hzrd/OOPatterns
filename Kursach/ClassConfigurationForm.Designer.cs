@@ -79,6 +79,7 @@
             this.добавитьСвойТипДляПеременнойToolStripMenuItem.Name = "добавитьСвойТипДляПеременнойToolStripMenuItem";
             this.добавитьСвойТипДляПеременнойToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.добавитьСвойТипДляПеременнойToolStripMenuItem.Text = "Добавить свой тип данных";
+            this.добавитьСвойТипДляПеременнойToolStripMenuItem.Click += new System.EventHandler(this.добавитьСвойТипДляПеременнойToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton1
             // 
