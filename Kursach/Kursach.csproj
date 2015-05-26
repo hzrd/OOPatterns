@@ -60,6 +60,7 @@
     <Compile Include="Code_form.Designer.cs">
       <DependentUpon>Code_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Item.cs" />
     <Compile Include="UML_diagram_form.cs">
       <SubType>Form</SubType>
     </Compile>

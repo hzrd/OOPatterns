@@ -112,7 +112,8 @@ namespace Kursach
                 }
                 else
                 {
-                    int index1=0, index2=0;
+                    int index1 = 0; //Выделенный класс
+                    int index2 = 0; //Класс к которому идет агрегация
                     foreach (ClassBox c in Classes)
                     {
                         if (c.isSelected)
@@ -130,7 +131,7 @@ namespace Kursach
                     {
                         try
                         {
-                            Agregations.Add(new Agregation(Classes[index1], Classes[index2]));
+                            Agregations.Add(new Agregation( Classes[index1], Classes[index2]));
                             Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
                         }
                         catch
@@ -142,13 +143,19 @@ namespace Kursach
                     {
                         MessageBox.Show("Нельзя агрегировать самого себя!");
                     }
-                    setAgregation = false;                   
+                    setAgregation = false;
                 }
                 Redraw();
                 //----------------------------------------------------
             }
             else
-                contextMenuStrip1.Show(pictureBox1,e.X,e.Y);
+            {
+                if (Classes[Classes.Count-1].isAgregated)
+                {
+
+                }
+                contextMenuStrip1.Show(pictureBox1, e.X, e.Y);
+            }
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -321,6 +328,11 @@ namespace Kursach
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteFromDiagram();
+        }
+
+        private void deleteAgregationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

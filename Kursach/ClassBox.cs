@@ -10,12 +10,12 @@ namespace Kursach
 {
     public class ClassBox 
     {
-        public int X{set;get;}
-        public int Y{set;get;}
-        public int Width{set;get;}
+        public int X { set; get; }
+        public int Y { set; get; }
+        public int Width { set; get; }
         public int Height { set; get; }
 
-        Pen Border,Select,black;
+        Pen Border, Select, black;
         SolidBrush Background;
 
         public string Name { set; get; }
