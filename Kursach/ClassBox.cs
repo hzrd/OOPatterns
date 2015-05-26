@@ -121,7 +121,7 @@ namespace Kursach
             }
         }
 
-        void Resize()
+        public void Resize()
         {
             //Узнаем длину имени класса
             Width = TextRenderer.MeasureText(Name, new Font("Arial", 10)).Width;

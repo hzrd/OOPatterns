@@ -62,6 +62,8 @@ namespace Kursach
                 AddVirtualMethod(m);
             }
             temp.Name = f.Classes[index].Name;
+            temp.Resize();
+            temp.X = (pictureBox1.Width / 2) - (temp.Width / 2);
             g = Graphics.FromImage(bmp);
             temp.draw(g);
             textBox4.Text = temp.Name;
