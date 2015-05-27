@@ -15,6 +15,7 @@ namespace Kursach
     {
         public List<ClassBox> Classes = new List<ClassBox>();
         public List<Agregation> Agregations = new List<Agregation>();
+        public List<LoggerUserAction> logger = new List<LoggerUserAction>();
 
         public List<string> _pathToCreatingFile = new List<string>();
         int PosX, PosY;  //Координаты в которых будет расположен следующий объект
@@ -65,6 +66,7 @@ namespace Kursach
                 }
                 //Если есть место то добавляем объект-----------
                 Classes.Add(new ClassBox(PosX, PosY, 100, 100));
+                logger.Add(new LoggerUserAction(Action.AddClass, DateTime.Now, Classes[Classes.Count - 1].Name));
 
                 if ((PosX + 210) < pictureBox1.Width)
                     PosX += 110;
@@ -133,6 +135,7 @@ namespace Kursach
                         {
                             Agregations.Add(new Agregation( Classes[index1], Classes[index2]));
                             Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
+                            logger.Add(new LoggerUserAction(Action.AddAggregation, DateTime.Now, Classes[index2].Name));
                         }
                         catch
                         {
@@ -251,6 +254,7 @@ namespace Kursach
                         _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".h");
                         _pathToCreatingFile.Add(f.SelectedPath + "\\" + c.Name + ".cpp");
                     }
+                    logger.Add(new LoggerUserAction(Action.SaveFiles, DateTime.Now, c.Name));
                 }
             }
         }
@@ -273,12 +277,16 @@ namespace Kursach
                     {
                         try
                         {
-                            if (GetFreePosition()) 
-                            Classes.Add(cgmRead.ReadFile(file));
+                            if (GetFreePosition())
+                            {
+                                Classes.Add(cgmRead.ReadFile(file));
+                                logger.Add(new LoggerUserAction(Action.AddClass, DateTime.Now, Classes[Classes.Count - 1].Name));
+                            }
                             Classes[Classes.Count - 1].X = PosX;
                             Classes[Classes.Count - 1].Y = PosY;
                             Classes[Classes.Count - 1].Width = 100;
                             Classes[Classes.Count - 1].Height = 150;
+
                         }
                         catch
                         {
@@ -309,6 +317,7 @@ namespace Kursach
             {
                 if (MessageBox.Show("Вы действительно хотите удалить " + Classes[index].Name + " ?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    logger.Add(new LoggerUserAction(Action.DeleteClass, DateTime.Now, Classes[index].Name));
                     Classes.RemoveAt(index);
                     Redraw();
                 }

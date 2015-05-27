@@ -61,6 +61,7 @@
       <DependentUpon>Code_form.cs</DependentUpon>
     </Compile>
     <Compile Include="Item.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="UML_diagram_form.cs">
       <SubType>Form</SubType>
     </Compile>

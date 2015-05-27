@@ -33,13 +33,13 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addAgregationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAgregationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.deleteAgregationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -53,7 +53,7 @@
             this.deleteToolStripMenuItem,
             this.deleteAgregationToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 70);
             // 
             // addAgregationToolStripMenuItem
             // 
@@ -68,6 +68,13 @@
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // deleteAgregationToolStripMenuItem
+            // 
+            this.deleteAgregationToolStripMenuItem.Name = "deleteAgregationToolStripMenuItem";
+            this.deleteAgregationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.deleteAgregationToolStripMenuItem.Text = "Delete Agregation";
+            this.deleteAgregationToolStripMenuItem.Click += new System.EventHandler(this.deleteAgregationToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -104,6 +111,7 @@
             // toolStrip1
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2,
@@ -122,7 +130,7 @@
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(40, 40);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Text = "Добавить класс";
             this.toolStripButton1.Click += new System.EventHandler(this.Add_class_button_Click);
             // 
             // toolStripButton2
@@ -133,26 +141,19 @@
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(40, 40);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.toolStripButton2.Text = "Сохранить файлы";
             this.toolStripButton2.Click += new System.EventHandler(this.generate_code_button_Click);
             // 
             // toolStripButton3
             // 
             this.toolStripButton3.AutoSize = false;
             this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = global::Kursach.Properties.Resources.Load;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
             this.toolStripButton3.Size = new System.Drawing.Size(40, 40);
             this.toolStripButton3.Text = "Загрузить файлы";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
-            // 
-            // deleteAgregationToolStripMenuItem
-            // 
-            this.deleteAgregationToolStripMenuItem.Name = "deleteAgregationToolStripMenuItem";
-            this.deleteAgregationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.deleteAgregationToolStripMenuItem.Text = "Delete Agregation";
-            this.deleteAgregationToolStripMenuItem.Click += new System.EventHandler(this.deleteAgregationToolStripMenuItem_Click);
             // 
             // UML_diagram_form
             // 

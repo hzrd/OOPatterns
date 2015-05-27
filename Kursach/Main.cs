@@ -42,5 +42,15 @@ namespace Kursach
             udf.MdiParent = this;
             udf.Dock = DockStyle.Fill;
         }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            string temp = string.Empty;
+            foreach(LoggerUserAction lua in udf.logger)
+            {
+                temp += lua.Info()+"\n";
+            }
+            MessageBox.Show(temp);
+        }
     }
 }
