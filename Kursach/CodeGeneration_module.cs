@@ -9,6 +9,7 @@ namespace Kursach
 {
     public class CodeGeneration_module
     {
+        //Функция меняет тип данных на C# если параметр _cppFile true, или на C++, если параметр false
         private bool SwapType(ref string _type, bool _cppFile)
         {
             string[] masTypeUser =
@@ -55,6 +56,7 @@ namespace Kursach
             }
             return false;
         }
+        //Функция возвращает лист строк для записи в h файл
         public List<string> CodeH(string _NameClass, List<C_Variables> variables, List<C_Methods> methods, List<C_Methods> virtualMethods)
         {
             List<string> temp = new List<string>();
@@ -123,6 +125,7 @@ namespace Kursach
             temp.Add("}");
             return temp;
         }
+        //Функция возвращает лист строк для записи в cpp файл
         public List<string> CodeCpp(string _NameClass, List<C_Methods> methods)
         {
             List<string> temp = new List<string>();
@@ -152,7 +155,7 @@ namespace Kursach
             }
             return temp;
         }
-
+        //Функция которая записывает данные в файл, параметр _interface обозначает, нужно ли создавать cpp файл(для интерфейсов он не нужен)
         public void CodeToFile(ClassBox cb, string path, bool _interface)
         {
             using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".h"))
@@ -175,8 +178,8 @@ namespace Kursach
                 }
             }
         }
-
-        public List<C_Variables> AddVariable(string _type, string[] _names)
+        //Функция добавления переменной(-ых) из строки, где первый параметр тип переменной, второй - имя(имена) переменной(-ых)
+        private List<C_Variables> AddVariable(string _type, string[] _names)
         {
             //Функция принимает параметры: type - тип, names - "имя1","имя2" и т.д.
             List<C_Variables> _lcv = new List<C_Variables>();
@@ -186,7 +189,7 @@ namespace Kursach
             }
             return _lcv;
         }
-
+        //Функция добавления метода
         private C_Methods AddMethod(List<string> mas)
         {
             C_Methods temp = new C_Methods();
@@ -270,7 +273,7 @@ namespace Kursach
             }
             return temp;
         }
-
+        //Функция чтения файла для добавления класса\интерфейса
         public ClassBox ReadFile(string _path)
         {
             ClassBox temp = new ClassBox();
