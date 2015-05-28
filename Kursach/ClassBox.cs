@@ -42,6 +42,18 @@ namespace Kursach
             isSelected = false;
         }
 
+        public ClassBox(string _name)
+        {
+            Name = _name;
+            Count++;
+            Border = new Pen(new SolidBrush(Color.Black), 2);
+            Select = new Pen(new SolidBrush(Color.LightGreen), 2);
+            black = new Pen(new SolidBrush(Color.Black));
+            Background = new SolidBrush(Color.LightBlue);
+            //isAgregated = false;
+            isSelected = false;
+        }
+
         public ClassBox(int PosX, int PosY, int Width, int Height)
         {
             TestValues(); //Тестовые значения при инициализации

@@ -57,25 +57,44 @@ namespace Kursach
             return false;
         }
         //Функция возвращает лист строк для записи в h файл
-        public List<string> CodeH(string _NameClass, List<C_Variables> variables, List<C_Methods> methods, List<C_Methods> virtualMethods)
+        public List<string> CodeH(ClassBox _cb)
         {
             List<string> temp = new List<string>();
             temp.Add("#include <iostream.h>");
             temp.Add("using namespace std;");
-            temp.Add("class " + _NameClass + "\n{");
+            string tempNameClass = "class " + _cb.Name + " ";
+            if (_cb.ParentClasses.Count != 0)
+            {
+                tempNameClass += ": ";
+                foreach (ClassBox cb in _cb.ParentClasses)
+                {
+                    tempNameClass += "public " + cb.Name + ", ";
+                }
+                tempNameClass = tempNameClass.Remove(tempNameClass[tempNameClass.Length - 2]);
+            }
+            tempNameClass += "\n{";
             string tempType = string.Empty;
-            foreach (C_Variables arg in variables)
+            foreach (C_Variables arg in _cb.Variables)
             {
                 tempType = arg.Type;
                 SwapType(ref tempType, false);
                 arg.Type = tempType;
 
-                temp.Add("\t" + arg.Type + " " + arg.Name);
+                temp.Add("\t" + arg.Type + " " + arg.Name + ";");
+            }
+            //Дописываем агрегацию и композицию
+            foreach (ClassBox cb in _cb.AgregatedClasses)
+            {
+                temp.Add("\t" + cb.Name + " _" + cb.Name + ";");
+            }
+            foreach (ClassBox cb in _cb.CompositedClasses)
+            {
+                temp.Add("\t" + cb.Name + " _" + cb.Name + ";");
             }
             temp.Add("public:");
-            temp.Add(_NameClass + "();");
-            temp.Add("~" + _NameClass + "();");
-            foreach (C_Methods arg in methods)
+            temp.Add(_cb.Name + "();");
+            temp.Add("~" + _cb.Name + "();");
+            foreach (C_Methods arg in _cb.Methods)
             {
                 string tempString = string.Empty;
 
@@ -99,7 +118,7 @@ namespace Kursach
                 tempString += ");";
                 temp.Add(tempString);
             }
-            foreach (C_Methods vcm in virtualMethods)
+            foreach (C_Methods vcm in _cb.VirtualMethods)
             {
                 string tempString = string.Empty;
 
@@ -160,7 +179,7 @@ namespace Kursach
         {
             using (StreamWriter file = new System.IO.StreamWriter(path + "\\" + cb.Name + ".h"))
             {
-                foreach (string arg in CodeH(cb.Name, cb.Variables, cb.Methods, cb.VirtualMethods))
+                foreach (string arg in CodeH(cb))
                 {
                     file.WriteLine(arg);
                 }
@@ -288,6 +307,38 @@ namespace Kursach
                     if (_valueInLine[0] == "class")
                     {
                         temp.Name = _valueInLine[1];
+                        //Получаем родителей, если они есть
+                        int indexParent = 0;
+                        if (_valueInLine.Count > 2)
+                        {
+                            if (_valueInLine[2][0] == ':' && _valueInLine[2].Length > 1)
+                            {
+                                indexParent = 3;
+                            }
+                            if (_valueInLine[2] == ":")
+                            {
+                                indexParent = 4;
+                            }
+                            string tempParents = string.Empty;
+                            for (int i = indexParent; i < _valueInLine.Count; i++)
+                            {
+                                if (_valueInLine[i].LastIndexOf(',') != -1 && _valueInLine[i].LastIndexOf(',') != _valueInLine[i].Length - 1)
+                                {
+                                    tempParents += _valueInLine[i].Remove(_valueInLine[i].LastIndexOf('(')) + " ";
+                                    continue;
+                                }
+                                if (_valueInLine[i].LastIndexOf(',') != -1)
+                                {
+                                    tempParents += _valueInLine[i].Remove(_valueInLine[i].Length - 1);
+                                    i++;
+                                }
+                            }
+                            foreach (string parent in tempParents.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                temp.ParentClasses.Add(new ClassBox(parent));
+                            }
+                        }
+                        //И идем дальше
                         findclass = true;
                         continue;
                     }
@@ -335,7 +386,6 @@ namespace Kursach
                         //Если метод
                         if (!variable && _valueInLine.Count >= 2 && _valueInLine[1][0] != '~')
                         {
-                            C_Methods cm = new C_Methods();
                             if (!AddMethod(_valueInLine).Virtual)
                             {
                                 temp.Methods.Add(AddMethod(_valueInLine));

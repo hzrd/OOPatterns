@@ -303,6 +303,24 @@ namespace Kursach
                     }
                     Redraw();
                 }
+                //Проверяем правильность наброса связей
+                foreach (ClassBox _cb in Classes)
+                {
+                    //Проверяем в остальных классах
+                    for (int i = 0; i < Classes.Count; i++)
+                    {
+                        //Просматриваем список родителей
+                        for (int j = 0; j < Classes[i].ParentClasses.Count; j++)
+                        {
+                            if (_cb.Name == Classes[i].ParentClasses[j].Name)
+                            {
+                                Classes[i].ParentClasses.RemoveAt(j);
+                                Classes[i].ParentClasses.Add(_cb);
+                            }
+                        }
+                    }
+                }
+                Redraw();
             }
         }
 
