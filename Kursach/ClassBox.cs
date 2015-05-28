@@ -24,8 +24,12 @@ namespace Kursach
         public List<C_Methods> VirtualMethods = new List<C_Methods>();
         public static int Count = 0;
 
+        public List<ClassBox> AgregatedClasses = new List<ClassBox>();
+        public List<ClassBox> CompositedClasses = new List<ClassBox>();
+        public List<ClassBox> ParentClasses = new List<ClassBox>();
+
         public bool isSelected { set; get; }
-        public bool isAgregated { set; get; }
+        //public bool isAgregated { set; get; }
 
         public ClassBox()
         {
@@ -34,7 +38,7 @@ namespace Kursach
             Select = new Pen(new SolidBrush(Color.LightGreen), 2);
             black = new Pen(new SolidBrush(Color.Black));
             Background = new SolidBrush(Color.LightBlue);
-            isAgregated = false;
+            //isAgregated = false;
             isSelected = false;
         }
 
@@ -51,7 +55,7 @@ namespace Kursach
             Select = new Pen(new SolidBrush(Color.LightGreen),2);
             black = new Pen(new SolidBrush(Color.Black));
             Background = new SolidBrush(Color.LightBlue);
-            isAgregated = false;
+            //isAgregated = false;
             isSelected = false;
         }
 
@@ -119,6 +123,58 @@ namespace Kursach
                 g.DrawString("virtual " + cm.Type + " " + cm.Name + "()", new Font("Arial", 10), new SolidBrush(Color.Black), R.X + 2, R.Y + dY);
                 dY += 15;
             }
+
+            foreach (ClassBox c in AgregatedClasses)
+                drawConnection(g, c, 0);
+            foreach (ClassBox c in CompositedClasses)
+                drawConnection(g, c, 1);
+            foreach (ClassBox c in ParentClasses)
+                drawConnection(g, c, 2);
+        }
+
+        void drawConnection(Graphics g, ClassBox From, int Type)
+        {
+            SolidBrush sb = new SolidBrush(Color.Black);
+            Pen Black = new Pen(sb,2);
+            int x1, y1, x2, y2;
+            if (From.X+From.Width/2<X+Width/2)
+            {
+                x1 = From.X + From.Width+10;
+                y1 = From.Y + From.Height / 2;
+                x2 = X-20;
+                y2 = Y + Height / 2;
+                g.DrawLine(Black, x1-10, y1, x1, y1);
+                if (Type == 0)
+                    g.DrawPolygon(Black, new Point[] { new Point(x2, y2), new Point(x2 + 10, y2 + 6), new Point(x2 + 20, y2), new Point(x2 + 10, y2 - 6) });
+                if (Type == 1)
+                    g.FillPolygon(sb, new Point[] { new Point(x2, y2), new Point(x2 + 10, y2 + 6), new Point(x2 + 20, y2), new Point(x2 + 10, y2 - 6) });
+                if (Type == 2)
+                {
+                    g.DrawLine(Black,x2,y2,x2 +20, y2);
+                    g.DrawLine(Black,x2+10,y2+6,x2+20,y2);
+                    g.DrawLine(Black,x2+10,y2-6,x2+20,y2);
+                }
+            }
+            else
+            {
+                x1 = From.X-10;
+                y1 = From.Y + From.Height / 2;
+                x2 = X+Width+20;
+                y2 = Y + Height / 2;
+                g.DrawLine(Black, x1, y1, x1 + 10, y1);
+                if (Type == 0)
+                    g.DrawPolygon(Black, new Point[] { new Point(x2, y2), new Point(x2 - 10, y2 + 6), new Point(x2 - 20, y2), new Point(x2 - 10, y2 - 6) });
+                if (Type == 1)
+                    g.FillPolygon(sb, new Point[] { new Point(x2, y2), new Point(x2 - 10, y2 + 6), new Point(x2 - 20, y2), new Point(x2 - 10, y2 - 6) });
+                if (Type == 2)
+                {
+                    g.DrawLine(Black, x2, y2, x2 - 20, y2);
+                    g.DrawLine(Black, x2 - 10, y2 + 6, x2 - 20, y2);
+                    g.DrawLine(Black, x2 - 10, y2 - 6, x2 - 20, y2);
+                }
+            }
+
+            g.DrawLine(Black, x1, y1, x2, y2); //Соединение
         }
 
         public void Resize()

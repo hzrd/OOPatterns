@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UML_diagram_form));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addAgregationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addCompositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAgregationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -40,6 +41,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.addParentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -50,10 +52,12 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addAgregationToolStripMenuItem,
+            this.addCompositionToolStripMenuItem,
+            this.addParentToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.deleteAgregationToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 136);
             // 
             // addAgregationToolStripMenuItem
             // 
@@ -61,6 +65,13 @@
             this.addAgregationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.addAgregationToolStripMenuItem.Text = "Add Agregation";
             this.addAgregationToolStripMenuItem.Click += new System.EventHandler(this.addAgregationToolStripMenuItem_Click);
+            // 
+            // addCompositionToolStripMenuItem
+            // 
+            this.addCompositionToolStripMenuItem.Name = "addCompositionToolStripMenuItem";
+            this.addCompositionToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.addCompositionToolStripMenuItem.Text = "Add Composition";
+            this.addCompositionToolStripMenuItem.Click += new System.EventHandler(this.addCompositionToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
@@ -155,6 +166,13 @@
             this.toolStripButton3.Text = "Загрузить файлы";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
+            // addParentToolStripMenuItem
+            // 
+            this.addParentToolStripMenuItem.Name = "addParentToolStripMenuItem";
+            this.addParentToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.addParentToolStripMenuItem.Text = "Add Parent";
+            this.addParentToolStripMenuItem.Click += new System.EventHandler(this.addParentToolStripMenuItem_Click);
+            // 
             // UML_diagram_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -188,6 +206,8 @@
         public System.Windows.Forms.ToolStripMenuItem addAgregationToolStripMenuItem;
         public System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         public System.Windows.Forms.ToolStripMenuItem deleteAgregationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addCompositionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addParentToolStripMenuItem;
     }
 }
 

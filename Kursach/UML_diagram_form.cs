@@ -23,7 +23,7 @@ namespace Kursach
         Bitmap buffImage;
         Graphics g, gBuffer;
         bool isClicked = false;  //Нажатие мышкой на объект
-        bool setAgregation = false;
+        int set = 0;
 
         public UML_diagram_form()
         {
@@ -90,7 +90,7 @@ namespace Kursach
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (!setAgregation)
+                if (set == 0)
                 {
                     int number = 0;
                     foreach (ClassBox C in Classes)
@@ -115,7 +115,7 @@ namespace Kursach
                 else
                 {
                     int index1 = 0; //Выделенный класс
-                    int index2 = 0; //Класс к которому идет агрегация
+                    int index2 = 0; //Класс от которого идет связь
                     foreach (ClassBox c in Classes)
                     {
                         if (c.isSelected)
@@ -133,9 +133,20 @@ namespace Kursach
                     {
                         try
                         {
-                            Agregations.Add(new Agregation( Classes[index1], Classes[index2]));
-                            Classes[index2].Variables.Add(new C_Variables(Classes[index1].Name, Classes[index1].Name.ToLower()));
-                            logger.Add(new LoggerUserAction(Action.AddAggregation, DateTime.Now, Classes[index2].Name));
+                            if (set == 1)
+                            {
+                                Classes[index1].AgregatedClasses.Add(Classes[index2]);
+                                Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
+                            }
+                            if (set == 2)
+                            {
+                                Classes[index1].CompositedClasses.Add(Classes[index2]);
+                                Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
+                            }
+                            if (set == 3)
+                                Classes[index1].ParentClasses.Add(Classes[index2]);
+                            logger.Add(new LoggerUserAction(Action.AddAggregation, DateTime.Now, Classes[index1].Name));
+
                         }
                         catch
                         {
@@ -144,19 +155,15 @@ namespace Kursach
                     }
                     else
                     {
-                        MessageBox.Show("Нельзя агрегировать самого себя!");
+                        MessageBox.Show("Нельзя установить связь с самим собой!");
                     }
-                    setAgregation = false;
+                    set = 0;
                 }
                 Redraw();
                 //----------------------------------------------------
             }
             else
             {
-                if (Classes[Classes.Count-1].isAgregated)
-                {
-
-                }
                 contextMenuStrip1.Show(pictureBox1, e.X, e.Y);
             }
         }
@@ -261,7 +268,7 @@ namespace Kursach
 
         private void addAgregationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            setAgregation = true;
+            set = 1;
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -341,7 +348,29 @@ namespace Kursach
 
         private void deleteAgregationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            foreach (ClassBox c in Classes)
+            {
+                if (c.isSelected)
+                {
+                    int i1 = c.Variables.Count - 1;
+                    int i2 = i1 - c.AgregatedClasses.Count;
+                    for (int i = i1; i > i2; i--)
+                        c.Variables.RemoveAt(i);
+                    c.AgregatedClasses.Clear();
+                    break;
+                }
+            }
+            Redraw();
+        }
 
+        private void addCompositionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            set = 2;
+        }
+
+        private void addParentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            set = 3;
         }
     }
 }
