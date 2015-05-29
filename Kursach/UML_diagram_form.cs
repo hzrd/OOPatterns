@@ -102,7 +102,7 @@ namespace Kursach
             foreach (ClassBox c in b.CompositedClasses)
                 if (c.Name == a.Name)
                     return false;
-            foreach (ClassBox c in a.ParentClasses)
+            foreach (ClassBox c in b.ParentClasses)
                 if (c.Name == a.Name)
                     return false;
             return true;
@@ -346,6 +346,43 @@ namespace Kursach
                             {
                                 Classes[i].ParentClasses.RemoveAt(j);
                                 Classes[i].ParentClasses.Add(_cb);
+                                break;
+                            }
+                        }
+                        //Проверяем агрегацию
+                        for (int v = 0; v< Classes[i].Variables.Count; v++)
+                        {
+                            if (_cb.Name == Classes[i].Variables[v].Type)
+                            {
+                                Classes[i].AgregatedClasses.Add(_cb);
+                                break;
+                            }
+                        }
+                    }
+                }
+                //Проверям доступные классы\интерфейсы и убираем ненужные связи
+                for (int i = 0; i < Classes.Count; i++)
+                {
+                    bool temp = false;
+                    //Смотрим всех родителей
+                    for (int indexParent = 0; indexParent < Classes[i].ParentClasses.Count; indexParent++)
+                    {
+                        //Просматриваем все классы, пока не найдем нужный --> parent
+                        for (int j = 0; j < Classes.Count; j++)
+                        {
+                            if (Classes[i].ParentClasses[indexParent].Name == Classes[j].Name)
+                            {
+                                temp = true;
+                                break;
+                            }
+                        }
+                        //Если не нашли
+                        if (!temp)
+                        {
+                            Classes[i].ParentClasses.Remove(Classes[i].ParentClasses[indexParent]);
+                            if (indexParent != 0)
+                            {
+                                indexParent--;
                             }
                         }
                     }

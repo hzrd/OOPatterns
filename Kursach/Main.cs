@@ -103,7 +103,7 @@ namespace Kursach
             this.toolStripButton1.Text = temp[0];
             this.toolStripButton2.Text = temp[1];
             this.toolStripButton3.Text = temp[2];
-            this.toolStripButton4.Text = temp[3];
+            this.toolStripDropDownButton1.Text = temp[3];
 
             udf.toolStripButton1.Text = temp[4];
             udf.toolStripButton2.Text = temp[5];
@@ -114,7 +114,7 @@ namespace Kursach
 
             cf.button1.Text = temp[10];
             cf.listView1.Columns[0].Text = temp[11];
-
+            
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)

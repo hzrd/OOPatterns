@@ -70,17 +70,17 @@ namespace Kursach
                 {
                     tempNameClass += "public " + cb.Name + ", ";
                 }
-                tempNameClass = tempNameClass.Remove(tempNameClass[tempNameClass.Length - 2]);
+                tempNameClass = tempNameClass.Remove(tempNameClass.Length - 2);
             }
             tempNameClass += "\n{";
+            temp.Add(tempNameClass);
             string tempType = string.Empty;
             foreach (C_Variables arg in _cb.Variables)
             {
                 tempType = arg.Type;
                 SwapType(ref tempType, false);
-                arg.Type = tempType;
 
-                temp.Add("\t" + arg.Type + " " + arg.Name + ";");
+                temp.Add("\t" + tempType + " " + arg.Name + ";");
             }
             //Дописываем агрегацию и композицию
             foreach (ClassBox cb in _cb.AgregatedClasses)
@@ -100,16 +100,14 @@ namespace Kursach
 
                 tempType = arg.Type;
                 SwapType(ref tempType, false);
-                arg.Type = tempType;
 
-                tempString += "\t" + arg.Type + " " + arg.Name + "(";
+                tempString += "\t" + tempType + " " + arg.Name + "(";
                 foreach (C_Variables var in arg.Variables)
                 {
                     tempType = var.Type;
                     SwapType(ref tempType, false);
-                    var.Type = tempType;
 
-                    tempString += var.Type + " " + var.Name + ", ";
+                    tempString += tempType + " " + var.Name + ", ";
                 }
                 if (tempString[tempString.Length - 2] == ',')
                 {
@@ -124,15 +122,14 @@ namespace Kursach
 
                 tempType = vcm.Type;
                 SwapType(ref tempType, false);
-                vcm.Type = tempType;
-                tempString += "\t" + "virtual " + vcm.Type + " " + vcm.Name + "(";
+
+                tempString += "\t" + "virtual " + tempType + " " + vcm.Name + "(";
                 foreach (C_Variables var in vcm.Variables)
                 {
                     tempType = var.Type;
                     SwapType(ref tempType, false);
-                    var.Type = tempType;
 
-                    tempString += var.Type + " " + var.Name + ", ";
+                    tempString += tempType + " " + var.Name + ", ";
                 }
                 if (tempString[tempString.Length - 2] == ',')
                 {
@@ -155,15 +152,14 @@ namespace Kursach
 
                 string tempType = arg.Type;
                 SwapType(ref tempType, false);
-                arg.Type = tempType;
 
-                tempString = arg.Type + " " + _NameClass + "::" + arg.Name + '(';
+                tempString = tempType + " " + _NameClass + "::" + arg.Name + '(';
                 foreach (C_Variables var in arg.Variables)
                 {
                     tempType = var.Type;
                     SwapType(ref tempType, false);
-                    var.Type = tempType;
-                    tempString += var.Type + " " + var.Name + ", ";
+
+                    tempString += tempType + " " + var.Name + ", ";
                 }
                 if (tempString[tempString.Length - 2] == ',')
                 {
@@ -322,14 +318,19 @@ namespace Kursach
                             string tempParents = string.Empty;
                             for (int i = indexParent; i < _valueInLine.Count; i++)
                             {
+                                bool index = false;
                                 if (_valueInLine[i].LastIndexOf(',') != -1 && _valueInLine[i].LastIndexOf(',') != _valueInLine[i].Length - 1)
                                 {
-                                    tempParents += _valueInLine[i].Remove(_valueInLine[i].LastIndexOf('(')) + " ";
-                                    continue;
+                                    _valueInLine[i] = _valueInLine[i].Remove(_valueInLine[i].LastIndexOf('('));
                                 }
                                 if (_valueInLine[i].LastIndexOf(',') != -1)
                                 {
-                                    tempParents += _valueInLine[i].Remove(_valueInLine[i].Length - 1);
+                                    _valueInLine[i] = _valueInLine[i].Remove(_valueInLine[i].Length - 1);
+                                    index = true;
+                                }
+                                tempParents += _valueInLine[i] + " ";
+                                if (index)
+                                {
                                     i++;
                                 }
                             }
