@@ -14,6 +14,8 @@ namespace Kursach
         public int Y { set; get; }
         public int Width { set; get; }
         public int Height { set; get; }
+        //public int ConnY { set; get; }
+        int ConnY;
 
         Pen Border, Select, black;
         SolidBrush Background;
@@ -40,6 +42,7 @@ namespace Kursach
             Background = new SolidBrush(Color.LightBlue);
             //isAgregated = false;
             isSelected = false;
+            ConnY = 10;
         }
 
         public ClassBox(string _name)
@@ -52,6 +55,7 @@ namespace Kursach
             Background = new SolidBrush(Color.LightBlue);
             //isAgregated = false;
             isSelected = false;
+            ConnY = 10;
         }
 
         public ClassBox(int PosX, int PosY, int Width, int Height)
@@ -136,6 +140,7 @@ namespace Kursach
                 dY += 15;
             }
 
+            ConnY = 10;
             foreach (ClassBox c in AgregatedClasses)
                 drawConnection(g, c, 0);
             foreach (ClassBox c in CompositedClasses)
@@ -152,9 +157,9 @@ namespace Kursach
             if (From.X+From.Width/2<X+Width/2)
             {
                 x1 = From.X + From.Width+10;
-                y1 = From.Y + From.Height / 2;
+                y1 = From.Y + From.ConnY;
                 x2 = X-20;
-                y2 = Y + Height / 2;
+                y2 = Y + ConnY;
                 g.DrawLine(Black, x1-10, y1, x1, y1);
                 if (Type == 0)
                     g.DrawPolygon(Black, new Point[] { new Point(x2, y2), new Point(x2 + 10, y2 + 6), new Point(x2 + 20, y2), new Point(x2 + 10, y2 - 6) });
@@ -170,9 +175,9 @@ namespace Kursach
             else
             {
                 x1 = From.X-10;
-                y1 = From.Y + From.Height / 2;
+                y1 = From.Y + From.ConnY;
                 x2 = X+Width+20;
-                y2 = Y + Height / 2;
+                y2 = Y + ConnY;
                 g.DrawLine(Black, x1, y1, x1 + 10, y1);
                 if (Type == 0)
                     g.DrawPolygon(Black, new Point[] { new Point(x2, y2), new Point(x2 - 10, y2 + 6), new Point(x2 - 20, y2), new Point(x2 - 10, y2 - 6) });
@@ -187,6 +192,8 @@ namespace Kursach
             }
 
             g.DrawLine(Black, x1, y1, x2, y2); //Соединение
+            From.ConnY += 20;
+            ConnY += 20;
         }
 
         public void Resize()

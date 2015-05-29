@@ -85,6 +85,28 @@ namespace Kursach
             }
         }
 
+        private bool CheckConnections(ClassBox a, ClassBox b)
+        {
+            foreach (ClassBox c in a.AgregatedClasses)
+                if (c.Name == b.Name)
+                    return false;
+            foreach (ClassBox c in a.CompositedClasses)
+                if (c.Name == b.Name)
+                    return false;
+            foreach (ClassBox c in a.ParentClasses)
+                if (c.Name == b.Name)
+                    return false;
+            foreach (ClassBox c in b.AgregatedClasses)
+                if (c.Name == a.Name)
+                    return false;
+            foreach (ClassBox c in b.CompositedClasses)
+                if (c.Name == a.Name)
+                    return false;
+            foreach (ClassBox c in a.ParentClasses)
+                if (c.Name == a.Name)
+                    return false;
+            return true;
+        }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -133,19 +155,27 @@ namespace Kursach
                     {
                         try
                         {
-                            if (set == 1)
+                            if (CheckConnections(Classes[index1], Classes[index2]))
                             {
-                                Classes[index1].AgregatedClasses.Add(Classes[index2]);
-                                Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
+                                if (set == 1)
+                                {
+
+                                    Classes[index1].AgregatedClasses.Add(Classes[index2]);
+                                    Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
+
+                                }
+                                if (set == 2)
+                                {
+                                    Classes[index1].CompositedClasses.Add(Classes[index2]);
+                                    Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
+                                }
+                                if (set == 3)
+                                    Classes[index1].ParentClasses.Add(Classes[index2]);
+                                logger.Add(new LoggerUserAction(Action.AddAggregation, DateTime.Now, Classes[index1].Name));
                             }
-                            if (set == 2)
-                            {
-                                Classes[index1].CompositedClasses.Add(Classes[index2]);
-                                Classes[index1].Variables.Add(new C_Variables(Classes[index2].Name, Classes[index2].Name.ToLower()));
-                            }
-                            if (set == 3)
-                                Classes[index1].ParentClasses.Add(Classes[index2]);
-                            logger.Add(new LoggerUserAction(Action.AddAggregation, DateTime.Now, Classes[index1].Name));
+                            else
+                                MessageBox.Show("Между этими объектами уже установлена связь");
+
 
                         }
                         catch
