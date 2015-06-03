@@ -156,7 +156,7 @@ namespace Kursach
 
         private void adminToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            auth = new Authorization();
+            auth = new Authorization(this);
             if (_eng)
             {
                 Language("eng");

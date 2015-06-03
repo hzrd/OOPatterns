@@ -40,7 +40,13 @@ namespace Kursach
             {
                 m.admin = true;
                 MessageBox.Show("Вы вошли под администратором. Теперь вам доступны функции редактирования и добавления шаблонов.");
+                this.Close();
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
