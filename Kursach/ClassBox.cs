@@ -92,7 +92,7 @@ namespace Kursach
         {
             Resize();
             Rectangle R = new Rectangle(X, Y, Width, Height);
-            if (Methods.Count == 0 && VirtualMethods.Count != 0)
+            if (Variables.Count==0 & Methods.Count == 0 && VirtualMethods.Count != 0)
             {
                 g.FillRectangle(new SolidBrush(Color.LightYellow), R);
             }

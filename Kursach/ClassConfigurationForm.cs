@@ -817,11 +817,11 @@ namespace Kursach
                                '/','|','-','*','+','@','"','№',';','$','%','?','(',')','<','>','`',
                                '~','^',':','№','!'};
             Regex pattern = new Regex("[a-z0-9_]", RegexOptions.IgnoreCase);
-            if (length > 15)
-            {
-                e.Handled = true;
-                return;
-            }
+            //if (length > 15)
+            //{
+            //    e.Handled = true;
+            //    return;
+            //}
             if (length == 0)
             {
                 foreach (char c in firstSymbol)
@@ -895,6 +895,10 @@ namespace Kursach
             if (e.KeyData == Keys.Back)
             {
                 backspace = true;
+            }
+            if (e.Control == true && e.KeyCode == Keys.S)
+            {
+                Save();
             }
         }
 
