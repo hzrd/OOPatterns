@@ -15,7 +15,9 @@ namespace Kursach
     {
         Code_form cf;
         UML_diagram_form udf;
+        Authorization auth;
         bool _eng = true;
+        public bool admin = false;
 
         public Main()
         {
@@ -43,6 +45,7 @@ namespace Kursach
             udf = new UML_diagram_form();
             udf.MdiParent = this;
             udf.Dock = DockStyle.Fill;
+            auth = new Authorization();
             Language("eng");
         }
 
@@ -72,7 +75,14 @@ namespace Kursach
                 "Delete",
                 "Delete Agregation",
                 "Save",
-                "Creating files"
+                "Creating files",
+                "Change language - rus",
+                "Admin",
+                "Add Agregation",
+                "Add Composition",
+                "Add Parent",
+                "Login:",
+                "Password:"
             };
             string[] rus =
             {
@@ -87,7 +97,14 @@ namespace Kursach
                 "Удалить",
                 "Удалить агрегацию",
                 "Сохранить",
-                "Созданные файлы"
+                "Созданные файлы",
+                "Смена языка - eng",
+                "Администратор",
+                "Добавить агригацию",
+                "Добавить композицию",
+                "Добавить родителя",
+                "Логин:",
+                "Пароль:"
             };
             string[] temp;
             if (l == "eng")
@@ -104,6 +121,8 @@ namespace Kursach
             this.toolStripButton2.Text = temp[1];
             this.toolStripButton3.Text = temp[2];
             this.toolStripDropDownButton1.Text = temp[3];
+            this.languageToolStripMenuItem.Text = temp[12];
+            this.adminToolStripMenuItem.Text = temp[13];
 
             udf.toolStripButton1.Text = temp[4];
             udf.toolStripButton2.Text = temp[5];
@@ -111,9 +130,15 @@ namespace Kursach
             udf.addAgregationToolStripMenuItem.Text = temp[7];
             udf.deleteToolStripMenuItem.Text = temp[8];
             udf.deleteAgregationToolStripMenuItem.Text = temp[9];
+            udf.addAgregationToolStripMenuItem.Text = temp[14];
+            udf.addCompositionToolStripMenuItem.Text = temp[15];
+            udf.addParentToolStripMenuItem.Text = temp[16];
 
             cf.button1.Text = temp[10];
             cf.listView1.Columns[0].Text = temp[11];
+
+            auth.label1.Text = temp[17];
+            auth.label2.Text = temp[18];
             
         }
 
@@ -127,6 +152,20 @@ namespace Kursach
             {
                 Language("eng");
             }
+        }
+
+        private void adminToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            auth = new Authorization();
+            if (_eng)
+            {
+                Language("eng");
+            }
+            else
+            {
+                Language("rus");
+            }
+            auth.Show();
         }
     }
 }
